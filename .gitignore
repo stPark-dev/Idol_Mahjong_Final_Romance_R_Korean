@@ -10,3 +10,4 @@ __pycache__/
 tools/poc/poc.lst
 tools/poc/cues.h
 tools/poc/tex.bin
+!assets/subtitle/SUB.BIN
