@@ -1,0 +1,174 @@
+{
+ "character": "リョーコ",
+ "ja_source": "faster-whisper large-v3(힌트 있음/없음)·kotoba-whisper v2.0 대조, 구간 재인식, AI 교정(2026-10-13)",
+ "note": "start/end는 동영상 시작부터의 초(음성 기준). 받아쓰기 후보는 work/asr/에 있음.",
+ "movies": [
+  "RY01.CPK",
+  "RY02.CPK",
+  "RY03.CPK",
+  "RY04.CPK",
+  "RY05.CPK",
+  "RYOP.CPK"
+ ],
+ "entries": [
+  {
+   "id": "ry.001",
+   "movie": "RY01.CPK",
+   "start": 10.8,
+   "end": 12.8,
+   "speaker": "リョーコ",
+   "ja": "あなたが噂の麻雀男ね",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.002",
+   "movie": "RY01.CPK",
+   "start": 14.0,
+   "end": 15.5,
+   "speaker": "リョーコ",
+   "ja": "でも、もうここまでよ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.003",
+   "movie": "RY01.CPK",
+   "start": 16.1,
+   "end": 18.7,
+   "speaker": "リョーコ",
+   "ja": "このリョーコ様が、コテンパンにしてやるわ",
+   "ko": "",
+   "status": "ja_draft",
+   "note": "인식은 「コテンパ」, 관용 표현 コテンパン"
+  },
+  {
+   "id": "ry.004",
+   "movie": "RY01.CPK",
+   "start": 19.4,
+   "end": 21.0,
+   "speaker": "リョーコ",
+   "ja": "さあ、勝負よ!",
+   "ko": "",
+   "status": "ja_draft",
+   "note": "kotoba는 놓침, lv3 두 벌 일치"
+  },
+  {
+   "id": "ry.005",
+   "movie": "RY02.CPK",
+   "start": 0.0,
+   "end": 2.5,
+   "speaker": "リョーコ",
+   "ja": "確かに、ただ者じゃないわね",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.006",
+   "movie": "RY02.CPK",
+   "start": 3.7,
+   "end": 6.7,
+   "speaker": "リョーコ",
+   "ja": "でも、一回ぐらいなら、まぐれで勝てるわ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.007",
+   "movie": "RY03.CPK",
+   "start": 0.0,
+   "end": 2.5,
+   "speaker": "リョーコ",
+   "ja": "あなた、ひょっとしてイカサマしてない?",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.008",
+   "movie": "RY03.CPK",
+   "start": 3.6,
+   "end": 4.6,
+   "speaker": "リョーコ",
+   "ja": "なんか変よ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.009",
+   "movie": "RY04.CPK",
+   "start": 1.0,
+   "end": 3.5,
+   "speaker": "リョーコ",
+   "ja": "うそ! この私が負けるなんて",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.010",
+   "movie": "RY04.CPK",
+   "start": 7.1,
+   "end": 10.4,
+   "speaker": "リョーコ",
+   "ja": "わかったわよ、自慢のバスト見せてあげるわ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.011",
+   "movie": "RY04.CPK",
+   "start": 15.85,
+   "end": 18.9,
+   "speaker": "リョーコ",
+   "ja": "ちょっと! いつまで見てんのよ、エッチなんだから",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "ry.012",
+   "movie": "RY05.CPK",
+   "start": 3.0,
+   "end": 4.0,
+   "speaker": "リョーコ",
+   "ja": "恥ずかしい…",
+   "ko": "",
+   "status": "ja_draft",
+   "flags": [
+    "speaker_estimated"
+   ]
+  },
+  {
+   "id": "ry.013",
+   "movie": "RY05.CPK",
+   "start": 5.5,
+   "end": 6.9,
+   "speaker": "アスカ",
+   "ja": "許せませんわ",
+   "ko": "",
+   "status": "ja_draft",
+   "flags": [
+    "speaker_estimated"
+   ],
+   "note": "말투(ですわ)로 아스카로 추정. 화면 미확인"
+  },
+  {
+   "id": "ry.014",
+   "movie": "RY05.CPK",
+   "start": 10.6,
+   "end": 12.2,
+   "speaker": "リョーコ",
+   "ja": "ああ、お姉さま!",
+   "ko": "",
+   "status": "ja_draft",
+   "flags": [
+    "speaker_estimated"
+   ]
+  }
+ ],
+ "excluded": [
+  {
+   "movie": "RYOP.CPK",
+   "range": "2.3-3.2",
+   "reason": "「ん?」 한 마디, 말 없음"
+  }
+ ]
+}

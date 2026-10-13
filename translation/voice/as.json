@@ -1,0 +1,144 @@
+{
+ "character": "仙道アスカ",
+ "ja_source": "faster-whisper large-v3(힌트 있음/없음)·kotoba-whisper v2.0 대조, 구간 재인식, AI 교정(2026-10-13)",
+ "note": "start/end는 동영상 시작부터의 초(음성 기준). 받아쓰기 후보는 work/asr/에 있음.",
+ "movies": [
+  "AS01.CPK",
+  "AS02.CPK",
+  "AS03.CPK",
+  "AS04.CPK",
+  "ASOP.CPK"
+ ],
+ "entries": [
+  {
+   "id": "as.001",
+   "movie": "AS01.CPK",
+   "start": 1.3,
+   "end": 2.6,
+   "speaker": "アスカ",
+   "ja": "やっといらしたわね",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.002",
+   "movie": "AS01.CPK",
+   "start": 2.6,
+   "end": 4.4,
+   "speaker": "アスカ",
+   "ja": "私は仙道アスカ",
+   "ko": "",
+   "status": "ja_draft",
+   "note": "성 한자 仙道/千道 후보. 한국어 표기는 같음"
+  },
+  {
+   "id": "as.003",
+   "movie": "AS01.CPK",
+   "start": 4.8,
+   "end": 7.2,
+   "speaker": "アスカ",
+   "ja": "私の大切なリョーコをいじめるなんて",
+   "ko": "",
+   "status": "ja_draft",
+   "note": "인식은 「リョーク」. 료코(RY)를 가리키는 것으로 봄"
+  },
+  {
+   "id": "as.004",
+   "movie": "AS01.CPK",
+   "start": 7.7,
+   "end": 9.0,
+   "speaker": "アスカ",
+   "ja": "いけない人ですわ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.005",
+   "movie": "AS01.CPK",
+   "start": 9.0,
+   "end": 12.1,
+   "speaker": "アスカ",
+   "ja": "おじさまから教わった究極の麻雀奥義で",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.006",
+   "movie": "AS01.CPK",
+   "start": 12.4,
+   "end": 14.8,
+   "speaker": "アスカ",
+   "ja": "たっぷりとお礼をさせていただきますわ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.007",
+   "movie": "AS02.CPK",
+   "start": 0.7,
+   "end": 3.0,
+   "speaker": "アスカ",
+   "ja": "おじさまの教え通りに打ったのに",
+   "ko": "",
+   "status": "ja_draft",
+   "note": "lv3 「撃った」는 오기, 마작은 打つ"
+  },
+  {
+   "id": "as.008",
+   "movie": "AS02.CPK",
+   "start": 3.0,
+   "end": 4.8,
+   "speaker": "アスカ",
+   "ja": "仕方ありませんわ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.009",
+   "movie": "AS03.CPK",
+   "start": 0.0,
+   "end": 2.7,
+   "speaker": "アスカ",
+   "ja": "少し、あなたを見直しましたわ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.010",
+   "movie": "AS04.CPK",
+   "start": 0.8,
+   "end": 2.8,
+   "speaker": "アスカ",
+   "ja": "もう私にはこれ以上…",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.011",
+   "movie": "AS04.CPK",
+   "start": 2.8,
+   "end": 6.4,
+   "speaker": "アスカ",
+   "ja": "あなたがそこまで言うなら",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "as.012",
+   "movie": "AS04.CPK",
+   "start": 7.0,
+   "end": 8.2,
+   "speaker": "アスカ",
+   "ja": "強引な人",
+   "ko": "",
+   "status": "ja_draft"
+  }
+ ],
+ "excluded": [
+  {
+   "movie": "ASOP.CPK",
+   "range": "8.8-9.8",
+   "reason": "웃음(うふふ/アハハ), 말 없음"
+  }
+ ]
+}

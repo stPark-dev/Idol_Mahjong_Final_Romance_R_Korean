@@ -1,0 +1,12 @@
+*.7z
+*.bin
+*.cue
+*.iso
+orig/
+work/
+out/
+__pycache__/
+.pytest_cache/
+tools/poc/poc.lst
+tools/poc/cues.h
+tools/poc/tex.bin

@@ -1,0 +1,132 @@
+{
+ "character": "藤崎美香",
+ "ja_source": "faster-whisper large-v3(힌트 있음/없음)·kotoba-whisper v2.0 대조, 구간 재인식, AI 교정(2026-10-13)",
+ "note": "start/end는 동영상 시작부터의 초(음성 기준). 받아쓰기 후보는 work/asr/에 있음.",
+ "movies": [
+  "MI01.CPK",
+  "MI02.CPK",
+  "MI03.CPK",
+  "MI04.CPK",
+  "MIOP.CPK"
+ ],
+ "entries": [
+  {
+   "id": "mi.001",
+   "movie": "MI01.CPK",
+   "start": 4.6,
+   "end": 5.8,
+   "speaker": "美香",
+   "ja": "やっと来たわね",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.002",
+   "movie": "MI01.CPK",
+   "start": 6.3,
+   "end": 7.7,
+   "speaker": "美香",
+   "ja": "私は藤崎美香",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.003",
+   "movie": "MI01.CPK",
+   "start": 7.7,
+   "end": 9.9,
+   "speaker": "美香",
+   "ja": "リナはあなたに憧れてたのに",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.004",
+   "movie": "MI01.CPK",
+   "start": 9.9,
+   "end": 12.0,
+   "speaker": "美香",
+   "ja": "女心のわからない奴は",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.005",
+   "movie": "MI01.CPK",
+   "start": 12.8,
+   "end": 13.9,
+   "speaker": "美香",
+   "ja": "お仕置きしちゃうぞ",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.006",
+   "movie": "MI02.CPK",
+   "start": 0.0,
+   "end": 2.2,
+   "speaker": "美香",
+   "ja": "はぁ、やられちゃった",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.007",
+   "movie": "MI02.CPK",
+   "start": 2.2,
+   "end": 4.3,
+   "speaker": "美香",
+   "ja": "せっかくテンパイしてたのに",
+   "ko": "",
+   "status": "ja_draft",
+   "note": "kotoba 「転売」는 오인식"
+  },
+  {
+   "id": "mi.008",
+   "movie": "MI02.CPK",
+   "start": 16.5,
+   "end": 18.2,
+   "speaker": "美香",
+   "ja": "そんなに、見つめないで",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.009",
+   "movie": "MI03.CPK",
+   "start": 0.0,
+   "end": 2.4,
+   "speaker": "美香",
+   "ja": "うそー! なんでそんなに強いの?",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.010",
+   "movie": "MI04.CPK",
+   "start": 1.5,
+   "end": 2.3,
+   "speaker": "美香",
+   "ja": "仕方ない",
+   "ko": "",
+   "status": "ja_draft"
+  },
+  {
+   "id": "mi.011",
+   "movie": "MI04.CPK",
+   "start": 11.3,
+   "end": 13.4,
+   "speaker": "美香",
+   "ja": "私の腕ではかなわないわ",
+   "ko": "",
+   "status": "ja_draft"
+  }
+ ],
+ "excluded": [
+  {
+   "movie": "MIOP.CPK",
+   "range": "6.3-7.3",
+   "reason": "「ん?/うん」 한 마디, 말 없음"
+  }
+ ]
+}
