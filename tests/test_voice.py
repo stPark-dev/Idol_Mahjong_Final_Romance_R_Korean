@@ -78,3 +78,33 @@ def test_voiced_regions_covered(f):
             assert b <= dur + 0.05, f"{mv} cue past end {b} > {dur}"
         for a, b in regs:
             assert any(s < b and e > a for s, e in cov), f"{mv} voiced {a:.2f}-{b:.2f} not covered"
+
+
+GLOSSARY = f"{ROOT}/translation/glossary.json"
+
+
+def test_glossary_is_well_formed():
+    ds = json.load(open(GLOSSARY, encoding="utf-8"))["decisions"]
+    ids = [d["id"] for d in ds]
+    assert len(ids) == len(set(ids))
+    for d in ds:
+        assert d["state"] in {"proposed", "approved", "unresolved", "conflicting"}
+        assert d["source"].strip() and d["output"].strip() and d["scope"].strip()
+
+
+def test_notes_only_cite_known_glossary_decisions():
+    ids = {d["id"] for d in json.load(open(GLOSSARY, encoding="utf-8"))["decisions"]}
+    for f in FILES:
+        for e in load(f)["entries"]:
+            for ref in re.findall(r"\b[NTV]-[A-Z]+\b", e.get("ko_note", "")):
+                assert ref in ids, (e["id"], ref)
+
+
+def test_distribution_needs_approved_glossary():
+    # a line cannot be distribution_eligible while any decision is still proposed/unresolved
+    ds = json.load(open(GLOSSARY, encoding="utf-8"))["decisions"]
+    pending = [d["id"] for d in ds if d["state"] != "approved"]
+    for f in FILES:
+        for e in load(f)["entries"]:
+            if e["status"] == "distribution_eligible":
+                assert not pending, (e["id"], pending)

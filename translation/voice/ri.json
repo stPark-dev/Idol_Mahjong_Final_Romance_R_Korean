@@ -17,8 +17,10 @@
    "end": 6.4,
    "speaker": "里奈",
    "ja": "私、小泉里奈です",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "저, 고이즈미 리나예요.",
+   "status": "reviewed",
+   "ko_note": "N-RI",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.002",
@@ -27,8 +29,9 @@
    "end": 8.9,
    "speaker": "里奈",
    "ja": "あなたの噂、聞いています",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "당신 소문, 들었어요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.003",
@@ -37,9 +40,10 @@
    "end": 11.7,
    "speaker": "里奈",
    "ja": "私、麻雀覚えたいの",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "kotoba는 이 줄과 다음 줄을 놓침, lv3 두 벌 일치"
+   "ko": "저, 마작 배우고 싶어요.",
+   "status": "reviewed",
+   "note": "kotoba는 이 줄과 다음 줄을 놓침, lv3 두 벌 일치",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.004",
@@ -48,8 +52,11 @@
    "end": 13.8,
    "speaker": "里奈",
    "ja": "お家で教えてください",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "저희 집에서 가르쳐 주세요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "집에서 가르쳐 주세요.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ri.005",
@@ -58,8 +65,9 @@
    "end": 24.3,
    "speaker": "里奈",
    "ja": "私の部屋に男の人が来たの、初めてなの",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "제 방에 남자가 온 건 처음이에요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.006",
@@ -68,9 +76,11 @@
    "end": 28.5,
    "speaker": "里奈",
    "ja": "じゃあ、教えてくださいませ",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "lv3np 뒤 「ご視聴ありがとうございました」는 환각"
+   "ko": "그럼, 잘 가르쳐 주세요.",
+   "status": "reviewed",
+   "note": "lv3np 뒤 「ご視聴ありがとうございました」는 환각",
+   "ko_note": "くださいませ: 애교 섞인 공손함",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.007",
@@ -79,8 +89,12 @@
    "end": 5.8,
    "speaker": "里奈",
    "ja": "あんまり覗かないでね",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "그렇게 보지 마세요~",
+   "status": "reviewed",
+   "ko_note": "화면: 치마가 들춰진 장면",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "너무 훔쳐보지 마세요.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ri.008",
@@ -89,8 +103,9 @@
    "end": 8.6,
    "speaker": "里奈",
    "ja": "お噂通りお強いですね",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "소문대로 강하시네요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.009",
@@ -99,8 +114,12 @@
    "end": 11.2,
    "speaker": "里奈",
    "ja": "リナ、憧れちゃいます",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "리나, 반해 버리겠어요.",
+   "status": "reviewed",
+   "ko_note": "憧れちゃいます: 동경. 대안 「리나, 동경하게 돼요」",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "리나, 반해 버릴 것 같아요.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ri.010",
@@ -109,8 +128,9 @@
    "end": 26.7,
    "speaker": "里奈",
    "ja": "リナだってもう負けないもん",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "리나도 이젠 안 질 거예요!",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.011",
@@ -119,8 +139,9 @@
    "end": 5.4,
    "speaker": "里奈",
    "ja": "リナ、また負けちゃいました",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "리나, 또 져 버렸어요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.012",
@@ -129,8 +150,9 @@
    "end": 11.6,
    "speaker": "里奈",
    "ja": "どう?",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "어때요?",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.013",
@@ -139,8 +161,10 @@
    "end": 15.2,
    "speaker": "里奈",
    "ja": "リナ、色っぽい?",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "리나, 섹시해요?",
+   "status": "reviewed",
+   "ko_note": "色っぽい",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.014",
@@ -149,8 +173,10 @@
    "end": 20.1,
    "speaker": "里奈",
    "ja": "え? 胸がない?",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "네? 가슴이 없다고요?",
+   "status": "reviewed",
+   "ko_note": "플레이어의 대답(들리지 않음)에 반응",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.015",
@@ -159,8 +185,9 @@
    "end": 21.9,
    "speaker": "里奈",
    "ja": "ひどーい",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "너무해요~!",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.016",
@@ -169,8 +196,9 @@
    "end": 25.1,
    "speaker": "里奈",
    "ja": "リナが一番気にしてることなのに",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "리나가 제일 신경 쓰는 건데…",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ri.017",
@@ -179,8 +207,10 @@
    "end": 27.4,
    "speaker": "里奈",
    "ja": "先輩に言いつけちゃうから",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "선배한테 이를 거예요!",
+   "status": "reviewed",
+   "ko_note": "T-SENPAI",
+   "review": "translation/review/r2-2026-10-13.json"
   }
  ],
  "excluded": [
@@ -189,5 +219,6 @@
    "range": "4.4-5.5",
    "reason": "숨소리·「ふん」, 말 없음"
   }
- ]
+ ],
+ "ko_source": "Claude 초벌(2026-10-13), 장면 프레임·용어 기록(translation/glossary.json, 모두 제안 상태) 기준"
 }

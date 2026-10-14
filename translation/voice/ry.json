@@ -18,8 +18,10 @@
    "end": 12.8,
    "speaker": "リョーコ",
    "ja": "あなたが噂の麻雀男ね",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "네가 그 소문난 마작 사나이구나.",
+   "status": "reviewed",
+   "ko_note": "麻雀男",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.002",
@@ -28,8 +30,9 @@
    "end": 15.5,
    "speaker": "リョーコ",
    "ja": "でも、もうここまでよ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "하지만 여기까지야.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.003",
@@ -38,9 +41,13 @@
    "end": 18.7,
    "speaker": "リョーコ",
    "ja": "このリョーコ様が、コテンパンにしてやるわ",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "인식은 「コテンパ」, 관용 표현 コテンパン"
+   "ko": "이 료코 님이 납작하게 만들어 주겠어.",
+   "status": "reviewed",
+   "note": "인식은 「コテンパ」, 관용 표현 コテンパン",
+   "ko_note": "コテンパン",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "이 료코 님이 납작하게 눌러 주겠어.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ry.004",
@@ -49,9 +56,10 @@
    "end": 21.0,
    "speaker": "リョーコ",
    "ja": "さあ、勝負よ!",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "kotoba는 놓침, lv3 두 벌 일치"
+   "ko": "자, 승부다!",
+   "status": "reviewed",
+   "note": "kotoba는 놓침, lv3 두 벌 일치",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.005",
@@ -60,8 +68,9 @@
    "end": 2.5,
    "speaker": "リョーコ",
    "ja": "確かに、ただ者じゃないわね",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "확실히 보통내기가 아니네.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.006",
@@ -70,8 +79,9 @@
    "end": 6.7,
    "speaker": "リョーコ",
    "ja": "でも、一回ぐらいなら、まぐれで勝てるわ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "하지만 한 번쯤은 요행으로 이길 수도 있지.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.007",
@@ -80,8 +90,10 @@
    "end": 2.5,
    "speaker": "リョーコ",
    "ja": "あなた、ひょっとしてイカサマしてない?",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "너, 혹시 속임수 쓰는 거 아냐?",
+   "status": "reviewed",
+   "ko_note": "T-IKASAMA",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.008",
@@ -90,8 +102,9 @@
    "end": 4.6,
    "speaker": "リョーコ",
    "ja": "なんか変よ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "뭔가 이상해.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.009",
@@ -100,8 +113,11 @@
    "end": 3.5,
    "speaker": "リョーコ",
    "ja": "うそ! この私が負けるなんて",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "말도 안 돼! 이 료코 님이 지다니.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "말도 안 돼! 이 내가 지다니.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ry.010",
@@ -110,8 +126,11 @@
    "end": 10.4,
    "speaker": "リョーコ",
    "ja": "わかったわよ、自慢のバスト見せてあげるわ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "알았어, 내 자랑인 가슴, 보여 줄게.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "알았어, 자랑하는 가슴 보여 줄게.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ry.011",
@@ -120,8 +139,10 @@
    "end": 18.9,
    "speaker": "リョーコ",
    "ja": "ちょっと! いつまで見てんのよ、エッチなんだから",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "잠깐! 언제까지 볼 거야? 엉큼하긴.",
+   "status": "reviewed",
+   "ko_note": "エッチ",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.012",
@@ -130,11 +151,12 @@
    "end": 4.0,
    "speaker": "リョーコ",
    "ja": "恥ずかしい…",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "부끄러워…",
+   "status": "reviewed",
    "flags": [
     "speaker_estimated"
-   ]
+   ],
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.013",
@@ -143,12 +165,14 @@
    "end": 6.9,
    "speaker": "アスカ",
    "ja": "許せませんわ",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "용서할 수 없어요.",
+   "status": "reviewed",
    "flags": [
     "speaker_estimated"
    ],
-   "note": "말투(ですわ)로 아스카로 추정. 화면 미확인"
+   "note": "말투(ですわ)로 아스카로 추정. 화면 미확인",
+   "ko_note": "화자 아스카(화면에 등장, 말투)",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ry.014",
@@ -157,11 +181,15 @@
    "end": 12.2,
    "speaker": "リョーコ",
    "ja": "ああ、お姉さま!",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "아스카 언니!",
+   "status": "reviewed",
    "flags": [
     "speaker_estimated"
-   ]
+   ],
+   "ko_note": "T-ONEESAMA",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "아아, 언니!",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   }
  ],
  "excluded": [
@@ -170,5 +198,6 @@
    "range": "2.3-3.2",
    "reason": "「ん?」 한 마디, 말 없음"
   }
- ]
+ ],
+ "ko_source": "Claude 초벌(2026-10-13), 장면 프레임·용어 기록(translation/glossary.json, 모두 제안 상태) 기준"
 }

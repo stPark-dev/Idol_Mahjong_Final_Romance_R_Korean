@@ -1,0 +1,138 @@
+{
+  "note": "용어·말투 결정의 단일 기록. state: proposed(제안, 사람 승인 전) / approved(승인) / unresolved. 승인 전 결정을 쓴 줄은 배포 자격이 없다.",
+  "decisions": [
+    {
+      "id": "N-RI",
+      "source": "小泉里奈 (リナ)",
+      "output": "고이즈미 리나",
+      "scope": "전체",
+      "state": "approved",
+      "evidence": "RI01 자기소개 음성(받아쓰기). 한자 표기는 받아쓰기 기준이며 화면 표기는 미확인",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "N-MI",
+      "source": "藤崎美香",
+      "output": "후지사키 미카",
+      "scope": "전체",
+      "state": "approved",
+      "evidence": "MI01 자기소개 음성(받아쓰기)",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "N-KE",
+      "source": "ケイト",
+      "output": "케이트",
+      "scope": "전체",
+      "state": "approved",
+      "evidence": "KE01 자기소개 음성. 성은 음성에 없음",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "N-RY",
+      "source": "リョーコ",
+      "output": "료코",
+      "scope": "전체",
+      "state": "approved",
+      "evidence": "RY01 「このリョーコ様」, AS01. 성은 음성에 없음(프로필 화면 미확인)",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "N-AS",
+      "source": "仙道アスカ",
+      "output": "센도 아스카",
+      "scope": "전체",
+      "state": "approved",
+      "evidence": "AS01 자기소개 음성. 성 한자 仙道/千道는 받아쓰기 후보, 한국어 표기는 같음",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "T-MAHJONG",
+      "source": "麻雀",
+      "output": "마작",
+      "scope": "전체",
+      "state": "proposed"
+    },
+    {
+      "id": "T-TENPAI",
+      "source": "テンパイ",
+      "output": "텐파이",
+      "scope": "전체",
+      "state": "proposed",
+      "evidence": "국내 마작 용어로 그대로 쓰임. 대안: 「한 패만 더 오면 났는데」처럼 풀어 쓰기"
+    },
+    {
+      "id": "T-IKASAMA",
+      "source": "イカサマ",
+      "output": "속임수",
+      "scope": "전체",
+      "state": "proposed"
+    },
+    {
+      "id": "T-ONEESAMA",
+      "source": "お姉さま (료코 → 아스카)",
+      "output": "언니 (RY05 첫 등장 줄 ry.014만 「아스카 언니!」로 이름을 더함)",
+      "scope": "RY05 료코가 아스카를 부를 때",
+      "state": "approved",
+      "evidence": "RY05 화면: 아스카 등장 직후. AS01 「私の大切なリョーコ」. 친자매인지 선후배인지 미확인 — 「언니」는 두 경우 모두 통함",
+      "approved": "2026-10-13 프로젝트 소유자(D-7)"
+    },
+    {
+      "id": "T-OJISAMA",
+      "source": "おじさま (아스카)",
+      "output": "숙부님",
+      "scope": "AS01, AS02",
+      "state": "approved",
+      "evidence": "마작을 가르친 사람. 친척 아저씨인지 나이 든 남성 일반인지 음성만으로는 모름. 대안: 「아저씨」, 「할아버님」. 친척 여부는 미확인인 채로 「숙부님」 채택",
+      "approved": "2026-10-13 프로젝트 소유자(D-6)"
+    },
+    {
+      "id": "T-SENPAI",
+      "source": "先輩 (리나)",
+      "output": "선배",
+      "scope": "RI04",
+      "state": "proposed",
+      "evidence": "MI01에서 미카가 리나 편을 들어 나타남 → 미카로 보임. 「선배」는 그대로 통함"
+    },
+    {
+      "id": "V-RI",
+      "source": "리나 말투",
+      "output": "존댓말 「~요」, 스스로를 「리나」라고 부름(원문 リナ 자칭 유지). 플레이어 호칭은 되도록 생략, 필요하면 「당신」",
+      "scope": "리나 전체",
+      "state": "approved",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "V-MI",
+      "source": "미카 말투",
+      "output": "반말, 시원시원한 말투. 플레이어는 「너」",
+      "scope": "미카 전체",
+      "state": "approved",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "V-KE",
+      "source": "케이트 말투",
+      "output": "정중한 해요체에 영어 단어를 한글 발음으로 섞음(「스트롱 플레이어」, 「미스테이크」). 겸양어(いたします) 줄은 「~겠어요」. 영어 감탄사도 한글로(「오 마이 갓」), 단 「OK」는 원문대로",
+      "scope": "케이트 전체",
+      "state": "approved",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "V-RY",
+      "source": "료코 말투",
+      "output": "오만한 반말. 자칭 「료코 님」. 플레이어는 「너」",
+      "scope": "료코 전체",
+      "state": "approved",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    },
+    {
+      "id": "V-AS",
+      "source": "아스카 말투",
+      "output": "우아한 아가씨 존댓말(「~군요」, 「~랍니다」, 「~겠어요」). 플레이어는 「당신」",
+      "scope": "아스카 전체(RY05 포함)",
+      "state": "approved",
+      "approved": "2026-10-13 프로젝트 소유자(D-5)"
+    }
+  ]
+}

@@ -17,12 +17,14 @@
    "end": 6.2,
    "speaker": "ケイト",
    "ja": "ハーイ、ケイトです",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "하~이, 케이트예요.",
+   "status": "reviewed",
    "flags": [
     "asr_uncertain"
    ],
-   "note": "후보: 「こんにちは、ケイトです」(lv3 구간), 「はいケイトです」(kotoba), 「私の名前はケイトです」(lv3 전체). 첫 인사 형태 미확정"
+   "note": "후보: 「こんにちは、ケイトです」(lv3 구간), 「はいケイトです」(kotoba), 「私の名前はケイトです」(lv3 전체). 첫 인사 형태 미확정",
+   "ko_note": "받아쓰기 미확정(인사 형태). 어느 후보든 인사+이름이라 뜻은 같음",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.002",
@@ -31,12 +33,14 @@
    "end": 10.0,
    "speaker": "ケイト",
    "ja": "私、ベリーベリーストロングプレイヤーです",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "저는 베리 베리 스트롱 플레이어예요.",
+   "status": "reviewed",
    "flags": [
     "asr_uncertain"
    ],
-   "note": "후보: lv3 「とてもとても強いプレイヤー」, kotoba 「バリバリストランプレイ」/「ベルベーストラープレーレー」. 뜻은 같음"
+   "note": "후보: lv3 「とてもとても強いプレイヤー」, kotoba 「バリバリストランプレイ」/「ベルベーストラープレーレー」. 뜻은 같음",
+   "ko_note": "받아쓰기 미확정: 「とてもとても強い」일 수 있음 → 그 경우 「아주아주 강한 플레이어예요」",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.003",
@@ -45,8 +49,9 @@
    "end": 12.1,
    "speaker": "ケイト",
    "ja": "覚悟してください",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "각오하세요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.004",
@@ -55,12 +60,14 @@
    "end": 16.0,
    "speaker": "ケイト",
    "ja": "OK! レッツプレイ麻雀!",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "OK! 레츠 플레이 마작!",
+   "status": "reviewed",
    "flags": [
     "asr_uncertain"
    ],
-   "note": "후보: 「OK! マジョンをプレイしましょう」(lv3 전체), 「Let's play マジョー」(lv3 구간)"
+   "note": "후보: 「OK! マジョンをプレイしましょう」(lv3 전체), 「Let's play マジョー」(lv3 구간)",
+   "ko_note": "받아쓰기 미확정: 「マジョンをプレイしましょう」 후보 → 「마작을 해요!」",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.005",
@@ -69,8 +76,9 @@
    "end": 4.75,
    "speaker": "ケイト",
    "ja": "オーマイガー、ワタシ、ミステイクしました",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "오 마이 갓! 저, 미스테이크했어요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.006",
@@ -79,8 +87,9 @@
    "end": 3.6,
    "speaker": "ケイト",
    "ja": "オー、ノー! あなた、ストロングプレイヤーね!",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "오, 노! 당신, 스트롱 플레이어네요!",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.007",
@@ -89,12 +98,16 @@
    "end": 15.9,
    "speaker": "ケイト",
    "ja": "バット、ネクスト! 私がいただきます!",
-   "ko": "",
-   "status": "ja_draft",
+   "ko": "하지만 넥스트! 다음 판은 제 거예요!",
+   "status": "reviewed",
    "flags": [
     "asr_uncertain"
    ],
-   "note": "lv3 전체만 이 뜻. 구간 재인식은 환각·불명(「ネクト、私が出てたちまい」)"
+   "note": "lv3 전체만 이 뜻. 구간 재인식은 환각·불명(「ネクト、私が出てたちまい」)",
+   "ko_note": "받아쓰기 미확정. いただきます를 '이길게요/가져갈게요'로 봄",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "벗, 넥스트! 이번엔 제가 가져갈게요!",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   },
   {
    "id": "ke.008",
@@ -103,8 +116,9 @@
    "end": 3.8,
    "speaker": "ケイト",
    "ja": "私、驚きました",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "저, 놀랐어요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.009",
@@ -113,8 +127,9 @@
    "end": 8.45,
    "speaker": "ケイト",
    "ja": "あなたのようなパワフルプレイヤーは初めてです",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "당신 같은 파워풀 플레이어는 처음이에요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "ke.010",
@@ -123,8 +138,12 @@
    "end": 12.25,
    "speaker": "ケイト",
    "ja": "私のスペシャル、お見せいたします",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "제 스페셜을 보여 드리겠어요.",
+   "status": "reviewed",
+   "ko_note": "スペシャル: 벗는 장면 직전. 원문도 돌려 말함",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "제 스페셜을 보여 드릴게요.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   }
  ],
  "excluded": [
@@ -133,5 +152,6 @@
    "range": "7.2-8.6",
    "reason": "감탄사 「イエーイ」 — 자막 넣지 않음(D-4)"
   }
- ]
+ ],
+ "ko_source": "Claude 초벌(2026-10-13), 장면 프레임·용어 기록(translation/glossary.json, 모두 제안 상태) 기준"
 }

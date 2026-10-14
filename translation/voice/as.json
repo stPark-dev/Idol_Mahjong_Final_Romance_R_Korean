@@ -17,8 +17,9 @@
    "end": 2.6,
    "speaker": "アスカ",
    "ja": "やっといらしたわね",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "드디어 오셨군요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.002",
@@ -27,9 +28,11 @@
    "end": 4.4,
    "speaker": "アスカ",
    "ja": "私は仙道アスカ",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "성 한자 仙道/千道 후보. 한국어 표기는 같음"
+   "ko": "저는 센도 아스카랍니다.",
+   "status": "reviewed",
+   "note": "성 한자 仙道/千道 후보. 한국어 표기는 같음",
+   "ko_note": "N-AS",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.003",
@@ -38,9 +41,10 @@
    "end": 7.2,
    "speaker": "アスカ",
    "ja": "私の大切なリョーコをいじめるなんて",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "인식은 「リョーク」. 료코(RY)를 가리키는 것으로 봄"
+   "ko": "제 소중한 료코를 괴롭히다니",
+   "status": "reviewed",
+   "note": "인식은 「リョーク」. 료코(RY)를 가리키는 것으로 봄",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.004",
@@ -49,8 +53,9 @@
    "end": 9.0,
    "speaker": "アスカ",
    "ja": "いけない人ですわ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "못된 분이시네요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.005",
@@ -59,8 +64,10 @@
    "end": 12.1,
    "speaker": "アスカ",
    "ja": "おじさまから教わった究極の麻雀奥義で",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "숙부님께 배운 궁극의 마작 비기로",
+   "status": "reviewed",
+   "ko_note": "T-OJISAMA 미해결: おじさま가 친척인지 모름",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.006",
@@ -69,8 +76,10 @@
    "end": 14.8,
    "speaker": "アスカ",
    "ja": "たっぷりとお礼をさせていただきますわ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "톡톡히 갚아 드리겠어요.",
+   "status": "reviewed",
+   "ko_note": "お礼는 비꼬는 '답례' → 앙갚음 뜻으로 옮김",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.007",
@@ -79,9 +88,11 @@
    "end": 3.0,
    "speaker": "アスカ",
    "ja": "おじさまの教え通りに打ったのに",
-   "ko": "",
-   "status": "ja_draft",
-   "note": "lv3 「撃った」는 오기, 마작은 打つ"
+   "ko": "숙부님 가르침대로 쳤는데…",
+   "status": "reviewed",
+   "note": "lv3 「撃った」는 오기, 마작은 打つ",
+   "ko_note": "T-OJISAMA",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.008",
@@ -90,8 +101,9 @@
    "end": 4.8,
    "speaker": "アスカ",
    "ja": "仕方ありませんわ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "어쩔 수 없군요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.009",
@@ -100,8 +112,9 @@
    "end": 2.7,
    "speaker": "アスカ",
    "ja": "少し、あなたを見直しましたわ",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "조금은 당신을 다시 봤어요.",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.010",
@@ -110,8 +123,9 @@
    "end": 2.8,
    "speaker": "アスカ",
    "ja": "もう私にはこれ以上…",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "이제 저는 더 이상…",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.011",
@@ -120,8 +134,9 @@
    "end": 6.4,
    "speaker": "アスカ",
    "ja": "あなたがそこまで言うなら",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "당신이 그렇게까지 말씀하신다면",
+   "status": "reviewed",
+   "review": "translation/review/r2-2026-10-13.json"
   },
   {
    "id": "as.012",
@@ -130,8 +145,12 @@
    "end": 8.2,
    "speaker": "アスカ",
    "ja": "強引な人",
-   "ko": "",
-   "status": "ja_draft"
+   "ko": "막무가내인 분…",
+   "status": "reviewed",
+   "ko_note": "強引な人: 수줍게 하는 말. 대안 「억지도 세시네요」",
+   "review": "translation/review/r2-2026-10-13.json",
+   "ko_draft": "정말 막무가내시네요.",
+   "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
   }
  ],
  "excluded": [
@@ -140,5 +159,6 @@
    "range": "8.8-9.8",
    "reason": "웃음(うふふ/アハハ), 말 없음"
   }
- ]
+ ],
+ "ko_source": "Claude 초벌(2026-10-13), 장면 프레임·용어 기록(translation/glossary.json, 모두 제안 상태) 기준"
 }
