@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import cdsector, iso9660, mjdeclare, mjdraw, mjmenu, shopdesc, shopmark, shopmenu, shopmsg, subtitles
+from . import cdsector, iso9660, mjdeclare, mjdraw, mjlabel, mjmenu, mjyaku, shopdesc, shopmark, shopmenu, shopmsg, subtitles
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
@@ -22,8 +22,11 @@ SHOP_MSG = ROOT / "translation/graphics/shop_msg.json"
 MJ_CALL = ROOT / "translation/graphics/mj_call.json"
 MJ_DECLARE = ROOT / "translation/graphics/mj_declare.json"
 MJ_DRAW = ROOT / "translation/graphics/mj_draw.json"
+MJ_YAKU = ROOT / "translation/graphics/mj_yaku.json"
+MJ_LABEL = ROOT / "translation/graphics/mj_label.json"
+MJ_SCORE = ROOT / "translation/graphics/mj_score.json"
 GRAPHICS_ERRORS = (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError,
-                   mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError)
+                   mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError, mjyaku.MjYakuError, mjlabel.MjLabelError)
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -48,11 +51,15 @@ def _merge(writes: dict, secs: dict, name: str) -> None:
 
 
 def first_graphics(first: bytes, components: dict) -> bytes:
-    """1ST.BIN with the graphics text it holds itself (mahjong draw words) redrawn, same size."""
+    """1ST.BIN with the graphics text it holds itself (mahjong draw words, tsumo label) redrawn,
+    same size; the two modules touch separate cells."""
     if not components.get("mahjong"):
         return first
     try:
-        return mjdraw.build_file(first, mjdraw.load_texts(MJ_DRAW))
+        out = mjdraw.build_file(first, mjdraw.load_texts(MJ_DRAW))
+        if (mjdraw.editable(mjdraw.Layout.read(first), len(first)) & mjlabel.editable(len(first))).any():
+            raise BuildError("protected: draw words and tsumo label share bytes")
+        return mjlabel.build_file(out, mjlabel.load_text(MJ_LABEL))
     except GRAPHICS_ERRORS as ex:
         raise BuildError(str(ex)) from ex
 
@@ -193,7 +200,7 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
         first, added = subtitle_parts(disc, files, text, base)
         if components.get("mahjong"):     # the subtitle patch must leave the draw words alone
             lay = mjdraw.Layout.read(first0)
-            mask = mjdraw.editable(lay, len(first0))
+            mask = mjdraw.editable(lay, len(first0)) | mjlabel.editable(len(first0))
             same = np.frombuffer(first[:len(first0)], np.uint8)[mask] == np.frombuffer(base, np.uint8)[mask]
             if not same.all():
                 raise BuildError("protected: the subtitle patch overwrote mahjong draw words in 1ST.BIN")
@@ -223,6 +230,15 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
             if data != data0:
                 _merge(writes, _file_sectors(name, files[name].lba, data, disc.user), name)
                 report[name] = {"replaced": True, "size": len(data)}
+    if components.get("mahjong"):
+        e2 = files["MJDAT2.BIN"]
+        mj2 = disc.read_file(e2.lba, e2.size)
+        try:
+            out2 = mjyaku.build_file(first0, mj2, mjyaku.load_yaku(MJ_YAKU), mjyaku.load_score(MJ_SCORE))
+        except GRAPHICS_ERRORS as ex:
+            raise BuildError(str(ex)) from ex
+        _merge(writes, _file_sectors("MJDAT2.BIN", e2.lba, out2, disc.user), "MJDAT2.BIN")
+        report["MJDAT2.BIN"] = {"replaced": True, "size": len(out2)}
     if sizes or placed:
         try:
             _merge(writes, iso9660.repack_root(disc.user, sizes, placed), "root directory")

@@ -1,0 +1,355 @@
+{
+  "note": "대국 화료 결과의 역 이름 그림(MJDAT2.BIN 셀 묶음, 역 표 1ST.BIN 0x06016818 {첫 셀, 폭}). id 숫자는 역 표 자리(19·28·50은 빈칸). 표기 원칙 D-14. D-20 승인(한자음 쪽: 해저로월·하저로어·영상개화·일기통관·소사희·대사희), 넘치면 글자를 줄임(D-21).",
+  "entries": [
+    {
+      "id": "mj.yaku.00",
+      "ja": "九連宝燈",
+      "ko": "구련보등",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.01",
+      "ja": "大四喜和",
+      "ko": "대사희",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.02",
+      "ja": "大三元",
+      "ko": "대삼원",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.03",
+      "ja": "小四喜和",
+      "ko": "소사희",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.04",
+      "ja": "字一色",
+      "ko": "자일색",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.05",
+      "ja": "清老頭",
+      "ko": "청노두",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.06",
+      "ja": "四暗刻",
+      "ko": "사암각",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.07",
+      "ja": "四槓子",
+      "ko": "스깡쯔",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.08",
+      "ja": "緑一色",
+      "ko": "녹일색",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.09",
+      "ja": "国士無双",
+      "ko": "국사무쌍",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.10",
+      "ja": "天和",
+      "ko": "천화",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.11",
+      "ja": "地和",
+      "ko": "지화",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.12",
+      "ja": "大車輪",
+      "ko": "대차륜",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.13",
+      "ja": "百万石",
+      "ko": "백만석",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.14",
+      "ja": "十三不塔",
+      "ko": "십삼불탑",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.15",
+      "ja": "人和",
+      "ko": "인화",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.16",
+      "ja": "流し満貫",
+      "ko": "유국만관",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.17",
+      "ja": "立直",
+      "ko": "리치",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.18",
+      "ja": "ダブル立直",
+      "ko": "더블 리치",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.20",
+      "ja": "立直一発",
+      "ko": "일발",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.21",
+      "ja": "門前清自模和",
+      "ko": "멘젠쯔모",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.22",
+      "ja": "断么九",
+      "ko": "탕야오",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.23",
+      "ja": "平和",
+      "ko": "핑후",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.24",
+      "ja": "一盃口",
+      "ko": "이페코",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.25",
+      "ja": "嶺上開花",
+      "ko": "영상개화",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.26",
+      "ja": "海底撈月",
+      "ko": "해저로월",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.27",
+      "ja": "槓フリ",
+      "ko": "창깡",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.29",
+      "ja": "役牌",
+      "ko": "역패",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.30",
+      "ja": "七対子",
+      "ko": "치또이츠",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.31",
+      "ja": "混老頭",
+      "ko": "혼노두",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.32",
+      "ja": "対々和",
+      "ko": "또이또이",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.33",
+      "ja": "三暗刻",
+      "ko": "삼암각",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.34",
+      "ja": "一気通貫",
+      "ko": "일기통관",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.35",
+      "ja": "三色同順",
+      "ko": "삼색동순",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.36",
+      "ja": "全帯么",
+      "ko": "찬타",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.37",
+      "ja": "三連刻",
+      "ko": "삼연각",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.38",
+      "ja": "混一色",
+      "ko": "혼일색",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.39",
+      "ja": "純全帯么",
+      "ko": "준찬타",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.40",
+      "ja": "三槓子",
+      "ko": "산깡쯔",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.41",
+      "ja": "三色同刻",
+      "ko": "삼색동각",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.42",
+      "ja": "一色三順",
+      "ko": "일색삼순",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.43",
+      "ja": "二盃口",
+      "ko": "량페코",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.44",
+      "ja": "小三元",
+      "ko": "소삼원",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.45",
+      "ja": "一色四順",
+      "ko": "일색사순",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.46",
+      "ja": "清盃口",
+      "ko": "청배구",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.47",
+      "ja": "清一色",
+      "ko": "청일색",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.48",
+      "ja": "連風牌",
+      "ko": "연풍패",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.49",
+      "ja": "ドラ",
+      "ko": "도라",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.51",
+      "ja": "五門斉",
+      "ko": "오문제",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    },
+    {
+      "id": "mj.yaku.52",
+      "ja": "河底撈魚",
+      "ko": "하저로어",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-20)"
+    }
+  ]
+}

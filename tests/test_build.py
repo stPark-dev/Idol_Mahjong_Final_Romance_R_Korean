@@ -187,7 +187,8 @@ def test_mahjong_alone_leaves_the_shop_file_untouched(tmp_path):
         changed = {n for n in old if old[n].lba < src.sectors and read(user, files[n]) != read(src.user, old[n])}
     finally:
         src.close()
-    assert changed == {"SL.BIN", "1ST.BIN"} and "SHOPDAT.BIN" not in m["files"]   # draw words live in 1ST.BIN
+    # draw words live in 1ST.BIN, the result panel's yaku names and glyphs in MJDAT2.BIN
+    assert changed == {"SL.BIN", "1ST.BIN", "MJDAT2.BIN"} and "SHOPDAT.BIN" not in m["files"]
 
 
 @pytest.mark.parametrize("text", [None, "ko"])
@@ -203,7 +204,9 @@ def test_mahjong_draw_words_live_in_1st_bin_with_or_without_subtitles(tmp_path, 
         src.close()
     e = files["1ST.BIN"]
     first = b"".join(user(e.lba + i) for i in range(e.sectors))[:e.size]
-    want = mw.build_file(first0, mw.load_texts(ROOT / "translation/graphics/mj_draw.json"))
+    from fromance import mjlabel as ml
+    want = ml.build_file(mw.build_file(first0, mw.load_texts(ROOT / "translation/graphics/mj_draw.json")),
+                         ml.load_text(ROOT / "translation/graphics/mj_label.json"))
     if text:                          # the subtitle hooks sit on top of the redrawn draw words
         assert len(first) > st.FIRST_SIZE
         assert [struct.unpack_from(">I", first, lit - st.FIRST_BASE)[0] for lit, _, _ in st.HOOKS] == \
@@ -213,5 +216,22 @@ def test_mahjong_draw_words_live_in_1st_bin_with_or_without_subtitles(tmp_path, 
     lay = mw.Layout.read(first0)
     got, ref = mw.decode_maps(lay, first[:st.FIRST_SIZE]), mw.decode_maps(lay, want)
     assert len(got) == len(ref) == 5 and all((a == b).all() for a, b in zip(got, ref))
-    mw.check_protected(lay, first0, first[:st.FIRST_SIZE] if not text else
-                       mw.apply(lay, first0, got))
+    mw.check_protected(lay, first0, mw.apply(lay, first0, got))      # the draw words alone
+
+
+def test_mahjong_build_writes_the_redrawn_result_panel(tmp_path):
+    from fromance import mjyaku as my
+    m = build.build(CUE, tmp_path, {"subtitles": "ko", "mahjong": True})
+    user = _reader(tmp_path / m["output_bin"])
+    e = iso9660.list_files(user)["MJDAT2.BIN"]
+    got = b"".join(user(e.lba + i) for i in range(e.sectors))[:e.size]
+    src = SourceDisc(CUE)
+    try:
+        files = iso9660.list_files(src.user)
+        first0 = src.read_file(files["1ST.BIN"].lba, files["1ST.BIN"].size)
+        mj2 = src.read_file(files["MJDAT2.BIN"].lba, files["MJDAT2.BIN"].size)
+    finally:
+        src.close()
+    want = my.build_file(first0, mj2, my.load_yaku(ROOT / "translation/graphics/mj_yaku.json"),
+                         my.load_score(ROOT / "translation/graphics/mj_score.json"))
+    assert got == want and len(got) == len(mj2)

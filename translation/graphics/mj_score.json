@@ -1,0 +1,8 @@
+{
+  "note": "대국 화료 결과의 점수 단위 글자(MJDAT2.BIN 16x16 글자 셀). D-22: 符·飜·点 → 부·판·점. 역 옆 판 수의 한자 숫자 一-九는 아라비아 숫자, 十은 「10」.",
+  "entries": [
+    {"id": "mj.score.han", "ja": "飜", "ko": "판", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-22)"},
+    {"id": "mj.score.fu", "ja": "符", "ko": "부", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-22)"},
+    {"id": "mj.score.ten", "ja": "点", "ko": "점", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-22)"}
+  ]
+}
