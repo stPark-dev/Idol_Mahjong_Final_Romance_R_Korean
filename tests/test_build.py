@@ -233,5 +233,6 @@ def test_mahjong_build_writes_the_redrawn_result_panel(tmp_path):
     finally:
         src.close()
     want = my.build_file(first0, mj2, my.load_yaku(ROOT / "translation/graphics/mj_yaku.json"),
-                         my.load_score(ROOT / "translation/graphics/mj_score.json"))
+                         my.load_score(ROOT / "translation/graphics/mj_score.json"),
+                         my.load_titles(ROOT / "translation/graphics/mj_title.json"))
     assert got == want and len(got) == len(mj2)

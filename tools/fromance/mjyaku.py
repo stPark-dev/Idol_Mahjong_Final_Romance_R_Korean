@@ -10,7 +10,9 @@ the kanji numerals 一-十 at 0x138 used for each yaku's han. Colours: entry 9 o
 table 0x0601576C from its 48th colour (CRAM colour 0x730).
 
 Names and glyphs are redrawn in their own cells, so no map changes: 飜/符/点 become 판/부/점,
-一-九 the digits 1-9 (copied from the digit glyphs) and 十 a narrow 「10」. A yaku's han picks one
+一-九 the digits 1-9 (copied from the digit glyphs) and 十 a narrow 「10」. Scores from mangan up show a rank title instead of fu/han: nine 9x3-cell pictures (72x24,
+colours 1 background, 11 ink, 2 edge) from unit 0x011 in this order: 役満 ハネ満 倍満
+満貫 ダブル役満 トリプル役満 三倍満 四倍役満 五倍役満; they are redrawn in place too. A yaku's han picks one
 numeral by index from the table at 0x06014794 (一-十), so numerals are never combined.
 """
 import json
@@ -36,6 +38,10 @@ COLOUR_ENTRY, COLOUR_FIRST = 9, 0x30
 GLYPHS = {"han": 0x104, "fu": 0x108, "ten": 0x10C}
 DIGITS = 0x110                   # 0-9, four units each
 KANJI = 0x138                    # 一 二 … 十, four units each
+TITLE_FIRST, TITLE_COUNT, TITLE_W, TITLE_H = 0x011, 9, 9, 3
+TITLE_BG, TITLE_INK, TITLE_EDGE = 1, 11, 2
+TITLE_COLOURS = (TITLE_BG, TITLE_INK, TITLE_EDGE)
+TITLE_FONT = "/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc"
 FONT = "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc"
 FONT_INDEX = 1
 SUPER = 4
@@ -129,6 +135,49 @@ def read_glyph(lay: Layout, data: bytes, u: int) -> np.ndarray:
     return img
 
 
+def _title_units(k: int):
+    u = TITLE_FIRST + TITLE_W * TITLE_H * k
+    return [(r, c, u + r * TITLE_W + c) for r in range(TITLE_H) for c in range(TITLE_W)]
+
+
+def read_title(lay: Layout, data: bytes, k: int) -> np.ndarray:
+    img = np.zeros((TITLE_H * 8, TITLE_W * 8), np.uint8)
+    for r, c, unit in _title_units(k):
+        img[r * 8:r * 8 + 8, c * 8:c * 8 + 8] = _cell(lay, data, unit)
+    return img
+
+
+@lru_cache(maxsize=None)
+def _title_font(px: int):
+    return ImageFont.truetype(TITLE_FONT, px * SUPER, index=FONT_INDEX)
+
+
+@lru_cache(maxsize=None)
+def _title_cmap():
+    return frozenset(TTCollection(TITLE_FONT).fonts[FONT_INDEX].getBestCmap())
+
+
+def render_title(text: str) -> np.ndarray:
+    """72x24 rank title: the word centred in bold ink with soft edges, as large as fits."""
+    w, h = TITLE_W * 8, TITLE_H * 8
+    if any(c != " " and ord(c) not in _title_cmap() for c in text):
+        raise MjYakuError(f"no glyph in {text!r}")
+    for px in range(22, 9, -1):
+        l, t, r, b = _title_font(px).getbbox(text)
+        if (r - l) / SUPER + 2 <= w and (b - t) / SUPER + 2 <= h:
+            break
+    else:
+        raise MjYakuError(f"title {text!r} does not fit {w}x{h}")
+    im = Image.new("L", (w * SUPER, h * SUPER), 0)
+    ImageDraw.Draw(im).text(((w * SUPER - (r - l)) / 2 - l, (h * SUPER - (b - t)) / 2 - t), text,
+                            font=_title_font(px), fill=255)
+    a = np.asarray(im.resize((w, h), Image.LANCZOS), dtype=np.float32) / 255
+    out = np.full((h, w), TITLE_BG, np.uint8)
+    out[a > 0.25] = TITLE_EDGE
+    out[a > 0.55] = TITLE_INK
+    return out
+
+
 @lru_cache(maxsize=None)
 def _font(px: int):
     return ImageFont.truetype(FONT, px * SUPER, index=FONT_INDEX)
@@ -165,18 +214,20 @@ def render_text(text: str, w: int, h: int, colours: dict, bg: int, align: str = 
 
 
 def editable(lay: Layout, size: int) -> np.ndarray:
-    """Mask of the MJDAT2.BIN bytes this module may change: yaku name and score glyph cells."""
+    """Mask of the MJDAT2.BIN bytes this module may change: yaku name, score glyph and rank title cells."""
     mask = np.zeros(size, bool)
     units = [unit for u, w in lay.yaku.values() for _, _, unit in _yaku_units(u, w)]
     for g in list(GLYPHS.values()) + [KANJI + 4 * k for k in range(10)]:
         units += [unit for _, _, unit in _glyph_units(g)]
+    for k in range(TITLE_COUNT):
+        units += [unit for _, _, unit in _title_units(k)]
     for unit in units:
         mask[cell_offset(lay, unit):cell_offset(lay, unit) + 32] = True
     return mask
 
 
 def check_protected(lay: Layout, before: bytes, after: bytes) -> None:
-    """Only yaku and glyph cells differ, and they use the result panel's text colours."""
+    """Only yaku, glyph and rank title cells differ, and they use the result panel's text colours."""
     if len(before) != len(after):
         raise MjYakuError("protected: MJDAT2.BIN size changed")
     mask = editable(lay, len(before))
@@ -190,6 +241,9 @@ def check_protected(lay: Layout, before: bytes, after: bytes) -> None:
     for g in list(GLYPHS.values()) + [KANJI + 4 * k for k in range(10)]:
         if not set(np.unique(read_glyph(lay, after, g)).tolist()) <= set(lay.colours):
             raise MjYakuError(f"protected: glyph {g:#x} uses a colour outside the panel's text colours")
+    for k in range(TITLE_COUNT):
+        if not set(np.unique(read_title(lay, after, k)).tolist()) <= set(TITLE_COLOURS):
+            raise MjYakuError(f"protected: rank title {k} uses a colour outside the title colours")
 
 
 def load_yaku(path) -> dict[int, str]:
@@ -218,8 +272,21 @@ def load_score(path) -> dict[str, str]:
     return out
 
 
-def build_file(first: bytes, mj2: bytes, yaku: dict[int, str], score: dict[str, str]) -> bytes:
-    """MJDAT2.BIN with the yaku names and score glyphs redrawn; the protected bytes are checked."""
+def load_titles(path) -> list[str]:
+    """Korean rank titles in bank order from translation/graphics/mj_title.json (mj.title.0-8)."""
+    entries = json.loads(Path(path).read_text(encoding="utf-8"))["entries"]
+    if [e.get("id") for e in entries] != [f"mj.title.{k}" for k in range(TITLE_COUNT)]:
+        raise MjYakuError(f"{path}: need title ids mj.title.0-{TITLE_COUNT - 1} in order")
+    if not all(isinstance(e.get("ko"), str) and e["ko"].strip() for e in entries):
+        raise MjYakuError(f"{path}: every title needs a Korean word")
+    return [e["ko"].strip() for e in entries]
+
+
+def build_file(first: bytes, mj2: bytes, yaku: dict[int, str], score: dict[str, str], titles: list[str]) -> bytes:
+    """MJDAT2.BIN with the yaku names, score glyphs and rank titles redrawn; the protected bytes
+    are checked."""
+    if len(titles) != TITLE_COUNT:
+        raise MjYakuError(f"{len(titles)} rank titles, the bank has {TITLE_COUNT}")
     lay = Layout.read(first, mj2)
     if set(yaku) != set(lay.yaku):
         raise MjYakuError(f"yaku names for slots {sorted(set(lay.yaku) ^ set(yaku))} missing or extra")
@@ -235,6 +302,10 @@ def build_file(first: bytes, mj2: bytes, yaku: dict[int, str], score: dict[str, 
     glyphs[KANJI + 4 * 9] = render_text("10", 16, 16, lay.colours, lay.bg)
     for g, img in glyphs.items():
         for r, c, unit in _glyph_units(g):
+            _put(lay, out, unit, img[r * 8:r * 8 + 8, c * 8:c * 8 + 8])
+    for k, text in enumerate(titles):
+        img = render_title(text)
+        for r, c, unit in _title_units(k):
             _put(lay, out, unit, img[r * 8:r * 8 + 8, c * 8:c * 8 + 8])
     out = bytes(out)
     check_protected(lay, mj2, out)

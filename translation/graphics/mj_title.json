@@ -1,0 +1,68 @@
+{
+  "note": "대국 화료 결과의 점수 등급 제목(MJDAT2.BIN 결과 셀 묶음 0x011부터 9x3칸 9개, 만관 이상일 때 점수 줄의 부·판 자리에 나옴). D-23 승인(트리플 역만은 「3배 역만」).",
+  "entries": [
+    {
+      "id": "mj.title.0",
+      "ja": "役満",
+      "ko": "역만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.1",
+      "ja": "ハネ満",
+      "ko": "하네만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.2",
+      "ja": "倍満",
+      "ko": "배만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.3",
+      "ja": "満貫",
+      "ko": "만관",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.4",
+      "ja": "ダブル役満",
+      "ko": "더블 역만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.5",
+      "ja": "トリプル役満",
+      "ko": "3배 역만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.6",
+      "ja": "三倍満",
+      "ko": "삼배만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.7",
+      "ja": "四倍役満",
+      "ko": "4배 역만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    },
+    {
+      "id": "mj.title.8",
+      "ja": "五倍役満",
+      "ko": "5배 역만",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-23)"
+    }
+  ]
+}

@@ -11,6 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 CUE = pathlib.Path(os.environ.get("FROMANCE_SOURCE_CUE", ROOT / "orig/Idol Mahjong - Final Romance R (Japan).cue"))
 YAKU = ROOT / "translation/graphics/mj_yaku.json"
 SCORE = ROOT / "translation/graphics/mj_score.json"
+TITLES = ROOT / "translation/graphics/mj_title.json"
 COLOURS = {1: (28, 29, 24), 11: (2, 2, 2), 12: (9, 8, 7), 13: (16, 15, 13), 14: (23, 22, 19)}
 
 
@@ -23,6 +24,22 @@ def test_text_shrinks_to_fit_and_uses_only_the_given_colours():
     assert cols.min() <= 2 and cols.max() < 40                              # starts at the left edge
     with pytest.raises(my.MjYakuError, match="fit"):
         my.render_text("아주아주아주아주긴역이름", 32, 16, COLOURS, bg=1)
+
+
+def test_a_title_too_long_or_without_glyphs_is_refused():
+    with pytest.raises(my.MjYakuError, match="fit"):
+        my.render_title("트리플 트리플 트리플 역만")
+    with pytest.raises(my.MjYakuError, match="glyph"):
+        my.render_title("\U0001F600")
+
+
+def test_titles_load_in_order(tmp_path):
+    titles = my.load_titles(TITLES)
+    assert len(titles) == my.TITLE_COUNT and titles[2] == "배만" and titles[3] == "만관"
+    bad = tmp_path / "bad.json"
+    bad.write_text('{"entries": [{"id": "mj.title.1", "ko": "x"}]}', encoding="utf-8")
+    with pytest.raises(my.MjYakuError, match="title"):
+        my.load_titles(bad)
 
 
 def test_texts_load_by_slot(tmp_path):
@@ -72,8 +89,18 @@ def test_layout_is_the_yaku_table_and_score_glyphs(files):
 def test_korean_result_text_changes_only_its_cells(files):
     first, mj2 = files["1ST.BIN"], files["MJDAT2.BIN"]
     lay = my.Layout.read(first, mj2)
-    out = my.build_file(first, mj2, my.load_yaku(YAKU), my.load_score(SCORE))
+    out = my.build_file(first, mj2, my.load_yaku(YAKU), my.load_score(SCORE), my.load_titles(TITLES))
     assert len(out) == len(mj2)
+    titles = my.load_titles(TITLES)
+    for k in range(my.TITLE_COUNT):                          # rank titles: each its own word, title colours
+        new, old = my.read_title(lay, out, k), my.read_title(lay, mj2, k)
+        assert np.array_equal(new, my.render_title(titles[k])) and not np.array_equal(new, old)
+        assert set(np.unique(new).tolist()) <= set(my.TITLE_COLOURS)
+    bad = bytearray(out); o = my.cell_offset(lay, my.TITLE_FIRST + 4); bad[o] = 0x55
+    with pytest.raises(my.MjYakuError, match="rank title"):
+        my.check_protected(lay, mj2, bytes(bad))
+    with pytest.raises(my.MjYakuError, match="titles"):
+        my.build_file(first, mj2, my.load_yaku(YAKU), my.load_score(SCORE), titles[:8])
     diff = np.frombuffer(out, np.uint8) != np.frombuffer(mj2, np.uint8)
     assert diff.any() and not (diff & ~my.editable(lay, len(mj2))).any()
     one = my.read_glyph(lay, out, 0x138)                     # kanji 一 now shows the digit 1

@@ -24,6 +24,7 @@ MJ_DECLARE = ROOT / "translation/graphics/mj_declare.json"
 MJ_DRAW = ROOT / "translation/graphics/mj_draw.json"
 MJ_YAKU = ROOT / "translation/graphics/mj_yaku.json"
 MJ_LABEL = ROOT / "translation/graphics/mj_label.json"
+MJ_TITLE = ROOT / "translation/graphics/mj_title.json"
 MJ_SCORE = ROOT / "translation/graphics/mj_score.json"
 GRAPHICS_ERRORS = (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError,
                    mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError, mjyaku.MjYakuError, mjlabel.MjLabelError)
@@ -234,7 +235,8 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
         e2 = files["MJDAT2.BIN"]
         mj2 = disc.read_file(e2.lba, e2.size)
         try:
-            out2 = mjyaku.build_file(first0, mj2, mjyaku.load_yaku(MJ_YAKU), mjyaku.load_score(MJ_SCORE))
+            out2 = mjyaku.build_file(first0, mj2, mjyaku.load_yaku(MJ_YAKU), mjyaku.load_score(MJ_SCORE),
+                                     mjyaku.load_titles(MJ_TITLE))
         except GRAPHICS_ERRORS as ex:
             raise BuildError(str(ex)) from ex
         _merge(writes, _file_sectors("MJDAT2.BIN", e2.lba, out2, disc.user), "MJDAT2.BIN")
