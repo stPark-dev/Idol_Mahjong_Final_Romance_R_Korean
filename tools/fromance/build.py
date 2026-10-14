@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import cdsector, iso9660, mjdeclare, mjdraw, mjlabel, mjmenu, mjyaku, shopdesc, shopmark, shopmenu, shopmsg, subtitles
+from . import cdsector, iso9660, mjdeclare, mjdraw, mjlabel, mjmenu, mjyaku, profile, shopdesc, shopmark, shopmenu, shopmsg, subtitles
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
@@ -25,9 +25,11 @@ MJ_DRAW = ROOT / "translation/graphics/mj_draw.json"
 MJ_YAKU = ROOT / "translation/graphics/mj_yaku.json"
 MJ_LABEL = ROOT / "translation/graphics/mj_label.json"
 MJ_TITLE = ROOT / "translation/graphics/mj_title.json"
+PROFILE = ROOT / "translation/graphics/profile.json"
 MJ_SCORE = ROOT / "translation/graphics/mj_score.json"
 GRAPHICS_ERRORS = (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError,
-                   mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError, mjyaku.MjYakuError, mjlabel.MjLabelError)
+                   mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError, mjyaku.MjYakuError, mjlabel.MjLabelError,
+                   profile.ProfileError)
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -92,9 +94,10 @@ def shop_files(first: bytes, sl0: bytes, shop0: bytes) -> tuple[bytes, bytes]:
     return sl, shop
 
 
-def graphics_masks(first: bytes, sl0: bytes, shop0: bytes, components: dict) -> list[ShopMasks]:
-    """Write and keep masks of every enabled graphics module (shop: menu, message, description,
-    owned mark; mahjong: call window)."""
+def graphics_masks(first: bytes, sl0: bytes, shop0: bytes, components: dict, pd0: bytes = None) -> list[ShopMasks]:
+    """Write and keep masks of every enabled graphics module on SL.BIN and SHOPDAT.BIN (shop:
+    menu, message, description, owned mark; mahjong: call window, declarations; profile: body
+    maps). PROFDAT.BIN is the profile module's alone and checked by it."""
     n_sl, n_shop = len(sl0), len(shop0)
     out = []
     if components.get("shop"):
@@ -112,6 +115,10 @@ def graphics_masks(first: bytes, sl0: bytes, shop0: bytes, components: dict) -> 
         frames = mjdeclare.read_frames(first, sl0)
         out.append(ShopMasks(mjdeclare.editable(frames, n_sl), np.zeros(n_shop, bool),
                              mjdeclare.kept(first, n_sl), np.zeros(n_shop, bool)))
+    if components.get("profile"):
+        lay = profile.Layout.read(first, sl0, pd0)
+        out.append(ShopMasks(profile.editable(lay, n_sl, len(pd0))[0], np.zeros(n_shop, bool),
+                             profile.kept_sl(n_sl), np.zeros(n_shop, bool)))
     return out
 
 
@@ -120,14 +127,18 @@ def shop_masks(first: bytes, sl0: bytes, shop0: bytes) -> list[ShopMasks]:
     return graphics_masks(first, sl0, shop0, {"shop": True})
 
 
-def graphics_files(first: bytes, sl0: bytes, shop0: bytes, components: dict) -> tuple[bytes, bytes]:
-    """SL.BIN and SHOPDAT.BIN with every enabled graphics module applied; every layout is read
-    from the original files."""
+def graphics_files(first: bytes, sl0: bytes, shop0: bytes, components: dict, pd0: bytes = None):
+    """SL.BIN and SHOPDAT.BIN (and PROFDAT.BIN when pd0 is given) with every enabled graphics
+    module applied; every layout is read from the original files."""
     sl, shop = shop_files(first, sl0, shop0) if components.get("shop") else (sl0, shop0)
     if components.get("mahjong"):
         sl = mjmenu.build_file(first, sl, mjmenu.load_texts(MJ_CALL), base_sl=sl0)
         sl = mjdeclare.build_file(first, sl, mjdeclare.load_texts(MJ_DECLARE), base_sl=sl0)
-    return sl, shop
+    pd = pd0
+    if components.get("profile"):
+        names, bodies = profile.load_texts(PROFILE)
+        sl, pd = profile.build_files(first, sl, pd0, names, bodies)
+    return (sl, shop) if pd0 is None else (sl, shop, pd)
 
 
 def _only(base: bytes, new: bytes, mask: np.ndarray) -> bytes:
@@ -137,14 +148,19 @@ def _only(base: bytes, new: bytes, mask: np.ndarray) -> bytes:
     return out.tobytes()
 
 
-def check_graphics(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes, components: dict) -> None:
+def check_graphics(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes, components: dict,
+                   pd0: bytes = None, pd: bytes = None) -> None:
     """Final SL.BIN and SHOPDAT.BIN against the originals: no module writes a byte another
     module writes or relies on, no other byte changed, and every rewritten map entry or pixel
     is one the game can show."""
     if len(sl) != len(sl0) or len(shop) != len(shop0):
         raise BuildError("protected: SL.BIN or SHOPDAT.BIN size changed")
+    if components.get("profile") and (pd0 is None or pd is None):
+        raise BuildError("protected: the profile check needs the original and new PROFDAT.BIN")
+    if not components.get("profile") and pd0 is not None and pd != pd0:
+        raise BuildError("protected: PROFDAT.BIN changed with the profile component off")
     try:
-        mods = graphics_masks(first, sl0, shop0, components)
+        mods = graphics_masks(first, sl0, shop0, components, pd0)
         for a in mods:
             for b in mods:
                 if a is not b and ((a.write_sl & (b.write_sl | b.keep_sl)).any()
@@ -166,6 +182,9 @@ def check_graphics(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: byte
             mjmenu.check_protected(call, sl0, _only(sl0, sl, mjmenu.editable(call, len(sl0))))
             frames = mjdeclare.read_frames(first, sl0)
             mjdeclare.check_protected(frames, sl0, _only(sl0, sl, mjdeclare.editable(frames, len(sl0))))
+        if components.get("profile"):
+            lay = profile.Layout.read(first, sl0, pd0)
+            profile.check_protected(lay, sl0, pd0, _only(sl0, sl, profile.editable(lay, len(sl0), len(pd0))[0]), pd)
     except GRAPHICS_ERRORS as ex:
         raise BuildError(str(ex)) from ex
 
@@ -219,15 +238,15 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
             placed.append((name, lba, len(data)))
             report[name] = {"lba": lba, "size": len(data)}
             lba += n
-    if components.get("shop") or components.get("mahjong"):
+    if components.get("shop") or components.get("mahjong") or components.get("profile"):
         read = lambda n: disc.read_file(files[n].lba, files[n].size)
-        first, sl0, shop0 = read("1ST.BIN"), read("SL.BIN"), read("SHOPDAT.BIN")
+        first, sl0, shop0, pd0 = read("1ST.BIN"), read("SL.BIN"), read("SHOPDAT.BIN"), read("PROFDAT.BIN")
         try:
-            sl, shop = graphics_files(first, sl0, shop0, components)
+            sl, shop, pd = graphics_files(first, sl0, shop0, components, pd0)
         except GRAPHICS_ERRORS as ex:
             raise BuildError(str(ex)) from ex
-        check_graphics(first, sl0, shop0, sl, shop, components)
-        for name, data, data0 in (("SL.BIN", sl, sl0), ("SHOPDAT.BIN", shop, shop0)):
+        check_graphics(first, sl0, shop0, sl, shop, components, pd0, pd)
+        for name, data, data0 in (("SL.BIN", sl, sl0), ("SHOPDAT.BIN", shop, shop0), ("PROFDAT.BIN", pd, pd0)):
             if data != data0:
                 _merge(writes, _file_sectors(name, files[name].lba, data, disc.user), name)
                 report[name] = {"replaced": True, "size": len(data)}

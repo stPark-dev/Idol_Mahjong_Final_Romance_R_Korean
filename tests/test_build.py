@@ -5,6 +5,7 @@ import os
 import pathlib
 import struct
 
+import numpy as np
 import pytest
 
 from fromance import build, iso9660, subtitles as st
@@ -236,3 +237,29 @@ def test_mahjong_build_writes_the_redrawn_result_panel(tmp_path):
                          my.load_score(ROOT / "translation/graphics/mj_score.json"),
                          my.load_titles(ROOT / "translation/graphics/mj_title.json"))
     assert got == want and len(got) == len(mj2)
+
+
+def test_profile_build_with_shop_and_mahjong(tmp_path):
+    from fromance import profile as pf
+    comps = {"subtitles": None, "shop": True, "mahjong": True, "profile": True}
+    m = build.build(CUE, tmp_path, comps)
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        first0, sl0, shop0, pd0 = (read(src.user, old[n]) for n in ("1ST.BIN", "SL.BIN", "SHOPDAT.BIN", "PROFDAT.BIN"))
+    finally:
+        src.close()
+    sl, shop, pd = (read(user, files[n]) for n in ("SL.BIN", "SHOPDAT.BIN", "PROFDAT.BIN"))
+    build.check_graphics(first0, sl0, shop0, sl, shop, comps, pd0, pd)
+    off = {k: v for k, v in comps.items() if k != "profile"}
+    with pytest.raises(build.BuildError, match="PROFDAT"):              # profile off: PROFDAT must stay
+        build.check_graphics(first0, sl0, shop0, sl0, shop0, off, pd0, pd)
+    with pytest.raises(build.BuildError, match="PROFDAT"):              # profile on: both files needed
+        build.check_graphics(first0, sl0, shop0, sl, shop, comps)
+    names, bodies = pf.load_texts(ROOT / "translation/graphics/profile.json")
+    lay = pf.Layout.read(first0, sl0, pd0)
+    assert all(np.array_equal(pf.decode_body(lay, k, sl, pd), pf.render_body(pf.layout_body(bodies[k])))
+               for k in range(5))
