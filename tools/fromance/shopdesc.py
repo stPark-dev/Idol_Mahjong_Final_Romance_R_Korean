@@ -33,6 +33,9 @@ PANEL_COLOURS = 53               # colour entry written to CRAM colour 0x100
 SUPER = shopmenu.SUPER
 
 
+IDS = ("shop.desc.1", "shop.desc.2", "shop.desc.3a", "shop.desc.3b", "shop.desc.3c", "shop.desc.4", "shop.desc.5")
+
+
 class ShopDescError(ValueError):
     pass
 
@@ -105,6 +108,7 @@ def render_panel(lines: list[str], colours: dict[int, tuple]) -> np.ndarray:
             raise ShopDescError(f"{line!r} needs {need} px, the panel is {PANEL_W} wide")
         draw.text((TEXT_X * SUPER, (top + 13) * SUPER), line, font=font, fill=255, anchor="ls")
     a = np.asarray(im.resize((PANEL_W, PANEL_H), Image.LANCZOS), dtype=np.float32) / 255
+    a[a < 0.1] = 0                   # drop resampling ringing around the glyphs
     lum = {i: sum(c) / 3 for i, c in colours.items()}
     want = lum[BG] + a * (lum[INK] - lum[BG])
     idx = np.array(sorted(lum, key=lum.get))
@@ -124,6 +128,34 @@ def apply(shop: bytes, offs: list[int], panels: list[np.ndarray]) -> bytes:
             o = off + (PANEL_Y + y) * PIC_W + PANEL_X
             out[o:o + PANEL_W] = p[y].tobytes()
     return bytes(out)
+
+
+def editable(offs: list[int], shop_size: int) -> np.ndarray:
+    """Mask of the SHOPDAT.BIN bytes this module may change (the seven panels)."""
+    mask = np.zeros(shop_size, bool)
+    for off in offs:
+        for y in range(PANEL_H):
+            o = off + (PANEL_Y + y) * PIC_W + PANEL_X
+            mask[o:o + PANEL_W] = True
+    return mask
+
+
+def kept(offs: list[int], sl_size: int, shop_size: int) -> tuple[np.ndarray, np.ndarray]:
+    """Masks of the bytes the descriptions rely on but this module leaves alone: the sprite
+    table records and the pictures outside the panels."""
+    sl_mask, shop_mask = np.zeros(sl_size, bool), np.zeros(shop_size, bool)
+    sl_mask[SPRITE_TABLE - SL_BASE + 8 * FIRST_PICTURE:SPRITE_TABLE - SL_BASE + 8 * (FIRST_PICTURE + PICTURES)] = True
+    for off in offs:
+        shop_mask[off:off + PIC_W * PIC_H] = True
+    return sl_mask, shop_mask & ~editable(offs, shop_size)
+
+
+def check_colours(offs: list[int], shop: bytes) -> None:
+    """Every panel pixel is a panel colour (the original's extra edge colour no longer)."""
+    mask = editable(offs, len(shop))
+    bad = np.flatnonzero(mask & ~np.isin(np.frombuffer(shop, np.uint8), (INK, BG) + EDGES))
+    if len(bad):
+        raise ShopDescError(f"protected: SHOPDAT.BIN byte {int(bad[0]):#x} is not a panel colour")
 
 
 def check_protected(offs: list[int], before: bytes, after: bytes) -> None:
@@ -150,6 +182,8 @@ def load_texts(path) -> list[list[str]]:
     texts = [[line.strip() for line in e["ko"]] for e in entries]
     if len(texts) != PICTURES or any(len(t) != len(LINE_TOP) for t in texts):
         raise ShopDescError(f"{path}: need {PICTURES} descriptions of {len(LINE_TOP)} lines")
+    if [e["id"] for e in entries] != list(IDS):
+        raise ShopDescError(f"{path}: entry ids must be {list(IDS)} in that order (sprite records 16-22)")
     return texts
 
 

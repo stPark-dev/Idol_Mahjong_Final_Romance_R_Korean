@@ -1,0 +1,45 @@
+{
+  "note": "상점 안내 상자(NBG2 16색 셀, SL.BIN 바이트 배치 61 환영·62 작별). 말하는 사람은 점원(布川ミク), 해요체. 「C」 단추는 원본 유지, 「スタート」 단추는 「시작」(D-15). state proposed = 사람 승인 전, 시험 디스크에만 쓴다.",
+  "entries": [
+    {
+      "id": "shop.welcome.1",
+      "ja": "いらっしゃいませ！",
+      "ko": "어서 오세요!",
+      "state": "proposed"
+    },
+    {
+      "id": "shop.welcome.2",
+      "ja": "アイテムを買う：",
+      "ko": "아이템 사기 :",
+      "state": "proposed",
+      "note": "뒤에 「C」 단추 그림"
+    },
+    {
+      "id": "shop.welcome.3",
+      "ja": "ショップを出る：",
+      "ko": "가게 나가기 :",
+      "state": "proposed",
+      "note": "뒤에 「スタート」 단추 그림"
+    },
+    {
+      "id": "shop.exit.1",
+      "ja": "ありがとうございました！",
+      "ko": "감사합니다!",
+      "state": "proposed"
+    },
+    {
+      "id": "shop.exit.2",
+      "ja": "またご利用くださいね♥",
+      "ko": "또 이용해 주세요♥",
+      "state": "proposed"
+    },
+    {
+      "id": "shop.button.start",
+      "ja": "スタート",
+      "ko": "시작",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-15)",
+      "note": "환영 상자 셋째 줄 끝의 단추 그림(안쪽 29x13px)"
+    }
+  ]
+}

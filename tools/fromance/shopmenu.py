@@ -139,6 +139,9 @@ def load_texts(path) -> list[str]:
     texts = [e["ko"].strip() for e in entries]
     if len(texts) != len(ITEM_ROWS) or not all(texts):
         raise ShopMenuError(f"{path}: need {len(ITEM_ROWS)} non-empty item names")
+    ids = [f"shop.item.{k + 1}" for k in range(len(ITEM_ROWS))]
+    if [e["id"] for e in entries] != ids:
+        raise ShopMenuError(f"{path}: entry ids must be {ids} in that order")
     return texts
 
 
@@ -250,24 +253,51 @@ def apply(lay: Layout, sl: bytes, shop: bytes, images: list[np.ndarray]) -> tupl
     return bytes(out_sl), bytes(out_shop)
 
 
+def editable(lay: Layout, sl_size: int, shop_size: int) -> tuple[np.ndarray, np.ndarray]:
+    """Masks of the SL.BIN and SHOPDAT.BIN bytes this module may change."""
+    sl_mask, shop_mask = np.zeros(sl_size, bool), np.zeros(shop_size, bool)
+    for it in lay.items:
+        for dy in (0, 1):
+            for x in range(it.cells):
+                sl_mask[_word(lay, it, dy, x):_word(lay, it, dy, x) + 2] = True
+    for u in lay.pool:
+        shop_mask[cell_offset(u):cell_offset(u) + 64] = True
+    return sl_mask, shop_mask
+
+
+def kept(lay: Layout, first: bytes, sl_size: int, shop_size: int) -> tuple[np.ndarray, np.ndarray]:
+    """Masks of the bytes the menu relies on but this module leaves alone: the rest of map 56,
+    the LV overlay maps and the rest of the menu cell block."""
+    write_sl, write_shop = editable(lay, sl_size, shop_size)
+    sl_mask, shop_mask = np.zeros(sl_size, bool), np.zeros(shop_size, bool)
+    sl_mask[lay.map_off:lay.map_off + 2 * 44 * 30] = True
+    for i in LEVEL_MAPS:
+        w, h, _, src, stride = _entry(first, i)
+        sl_mask[src - SL_BASE:src - SL_BASE + h * stride] = True
+    shop_mask[CELL_FILE:CELL_END] = True
+    return sl_mask & ~write_sl, shop_mask & ~write_shop
+
+
+def check_targets(lay: Layout, sl: bytes) -> None:
+    """Every item text word points at a pool cell or its row's background cell."""
+    pool = set(lay.pool)
+    for it in lay.items:
+        allowed = pool | {it.bg_units[0]}
+        for dy in (0, 1):
+            for x in range(it.cells):
+                u = struct.unpack_from(">H", sl, _word(lay, it, dy, x))[0] + lay.add
+                if u not in allowed:
+                    raise ShopMenuError(f"protected: item row {it.row} column {x} points at cell {u:#x}")
+
+
 def check_protected(lay: Layout, sl0: bytes, shop0: bytes, sl1: bytes, shop1: bytes) -> None:
     """Fail unless only item text map words and pool cells differ, and every text word points at
     a pool cell or its row's background cell."""
     if len(sl0) != len(sl1) or len(shop0) != len(shop1):
         raise ShopMenuError("protected: file size changed")
-    words = {_word(lay, it, dy, x) for it in lay.items for dy in (0, 1) for x in range(it.cells)}
-    for i in np.flatnonzero(np.frombuffer(sl0, np.uint8) != np.frombuffer(sl1, np.uint8)):
-        if int(i) & ~1 not in words:
-            raise ShopMenuError(f"protected: SL.BIN byte {int(i):#x} changed")
-    pool = set(lay.pool)
-    cells = {cell_offset(u) + i for u in pool for i in range(64)}
-    for i in np.flatnonzero(np.frombuffer(shop0, np.uint8) != np.frombuffer(shop1, np.uint8)):
-        if int(i) not in cells:
-            raise ShopMenuError(f"protected: SHOPDAT.BIN byte {int(i):#x} changed")
-    for it in lay.items:
-        allowed = pool | {it.bg_units[0]}
-        for dy in (0, 1):
-            for x in range(it.cells):
-                u = struct.unpack_from(">H", sl1, _word(lay, it, dy, x))[0] + lay.add
-                if u not in allowed:
-                    raise ShopMenuError(f"protected: item row {it.row} column {x} points at cell {u:#x}")
+    sl_mask, shop_mask = editable(lay, len(sl0), len(shop0))
+    for name, a, b, mask in (("SL.BIN", sl0, sl1, sl_mask), ("SHOPDAT.BIN", shop0, shop1, shop_mask)):
+        stray = np.flatnonzero((np.frombuffer(a, np.uint8) != np.frombuffer(b, np.uint8)) & ~mask)
+        if len(stray):
+            raise ShopMenuError(f"protected: {name} byte {int(stray[0]):#x} changed")
+    check_targets(lay, sl1)

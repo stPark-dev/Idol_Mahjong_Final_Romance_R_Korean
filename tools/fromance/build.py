@@ -4,9 +4,12 @@ import json
 import os
 import re
 import shutil
+from dataclasses import dataclass
 from pathlib import Path
 
-from . import cdsector, iso9660, shopdesc, shopmenu, subtitles
+import numpy as np
+
+from . import cdsector, iso9660, shopdesc, shopmark, shopmenu, shopmsg, subtitles
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
@@ -15,6 +18,7 @@ SUB_BIN = ROOT / "assets/subtitle/SUB.BIN"
 VOICE_DIR = ROOT / "translation/voice"
 SHOP_MENU = ROOT / "translation/graphics/shop_menu.json"
 SHOP_DESC = ROOT / "translation/graphics/shop_desc.json"
+SHOP_MSG = ROOT / "translation/graphics/shop_msg.json"
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -47,13 +51,61 @@ def subtitle_parts(disc: SourceDisc, files: dict, text: str) -> tuple[bytes, dic
     return subtitles.patch_first(first, sub), packs
 
 
+@dataclass(frozen=True)
+class ShopMasks:
+    write_sl: np.ndarray
+    write_shop: np.ndarray
+    keep_sl: np.ndarray          # bytes the module relies on and leaves alone
+    keep_shop: np.ndarray
+
+
+def shop_files(first: bytes, sl0: bytes, shop0: bytes) -> tuple[bytes, bytes]:
+    """SL.BIN and SHOPDAT.BIN with every shop graphics text drawn from translation/graphics;
+    every layout is read from the original SL.BIN."""
+    sl, shop = shopmenu.build_files(first, sl0, shop0, shopmenu.load_texts(SHOP_MENU))
+    sl, shop = shopmsg.build_files(first, sl, shop, shopmsg.load_texts(SHOP_MSG), base_sl=sl0)
+    shop = shopdesc.build_file(first, sl0, shop, shopdesc.load_texts(SHOP_DESC))
+    shop = shopmark.build_file(sl0, shop)
+    return sl, shop
+
+
+def shop_masks(first: bytes, sl0: bytes, shop0: bytes) -> list[ShopMasks]:
+    """Write and keep masks of the menu, message, description and owned-mark modules."""
+    n_sl, n_shop = len(sl0), len(shop0)
+    menu, msg = shopmenu.Layout.read(first, sl0), shopmsg.Layout.read(first, sl0)
+    offs = shopdesc.picture_offsets(sl0, n_shop)
+    return [ShopMasks(*shopmenu.editable(menu, n_sl, n_shop), *shopmenu.kept(menu, first, n_sl, n_shop)),
+            ShopMasks(*shopmsg.editable(msg, n_sl, n_shop), *shopmsg.kept(msg, first, n_sl, n_shop)),
+            ShopMasks(np.zeros(n_sl, bool), shopdesc.editable(offs, n_shop), *shopdesc.kept(offs, n_sl, n_shop)),
+            ShopMasks(np.zeros(n_sl, bool), shopmark.editable(shopmark.mark_offset(sl0, n_shop), n_shop),
+                      *shopmark.kept(n_sl, n_shop))]
+
+
 def check_shop(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes) -> None:
-    """Final shop files against the originals: with the description panels put back, only the
-    menu may differ (shopmenu); the panels may differ only in panel colours (shopdesc)."""
-    offs = shopdesc.picture_offsets(sl0, len(shop0))
-    menu_only = shopdesc.apply(shop, offs, [shopdesc.read_panel(shop0, o) for o in offs])
-    shopmenu.check_protected(shopmenu.Layout.read(first, sl0), sl0, shop0, sl, menu_only)
-    shopdesc.check_protected(offs, menu_only, shop)
+    """Final shop files against the originals: no module writes a byte another module writes
+    or relies on, no other byte changed, and every rewritten map entry or panel pixel is one
+    the game can show."""
+    if len(sl) != len(sl0) or len(shop) != len(shop0):
+        raise BuildError("protected: shop file size changed")
+    try:
+        mods = shop_masks(first, sl0, shop0)
+        for a in mods:
+            for b in mods:
+                if a is not b and ((a.write_sl & (b.write_sl | b.keep_sl)).any()
+                                   or (a.write_shop & (b.write_shop | b.keep_shop)).any()):
+                    raise BuildError("protected: a shop module may change bytes another module uses")
+        sl_ok = np.logical_or.reduce([m.write_sl for m in mods])
+        shop_ok = np.logical_or.reduce([m.write_shop for m in mods])
+        for name, a, b, ok in (("SL.BIN", sl0, sl, sl_ok), ("SHOPDAT.BIN", shop0, shop, shop_ok)):
+            stray = np.flatnonzero((np.frombuffer(a, np.uint8) != np.frombuffer(b, np.uint8)) & ~ok)
+            if len(stray):
+                raise BuildError(f"protected: {name} byte {int(stray[0]):#x} changed")
+        shopmenu.check_targets(shopmenu.Layout.read(first, sl0), sl)
+        shopmsg.check_targets(shopmsg.Layout.read(first, sl0), sl)
+        shopdesc.check_colours(shopdesc.picture_offsets(sl0, len(shop0)), shop)
+        shopmark.check_colours(shopmark.mark_offset(sl0, len(shop0)), shop)
+    except (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError) as ex:
+        raise BuildError(str(ex)) from ex
 
 
 def build(source_cue: Path, out_dir: Path, components: dict) -> dict:
@@ -93,10 +145,9 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
         read = lambda n: disc.read_file(files[n].lba, files[n].size)
         first, sl0, shop0 = read("1ST.BIN"), read("SL.BIN"), read("SHOPDAT.BIN")
         try:
-            sl, shop = shopmenu.build_files(first, sl0, shop0, shopmenu.load_texts(SHOP_MENU))
-            shop = shopdesc.build_file(first, sl0, shop, shopdesc.load_texts(SHOP_DESC))
+            sl, shop = shop_files(first, sl0, shop0)
             check_shop(first, sl0, shop0, sl, shop)
-        except (shopmenu.ShopMenuError, shopdesc.ShopDescError) as ex:
+        except (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError) as ex:
             raise BuildError(str(ex)) from ex
         for name, data in (("SL.BIN", sl), ("SHOPDAT.BIN", shop)):
             _merge(writes, _file_sectors(name, files[name].lba, data, disc.user), name)

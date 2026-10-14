@@ -33,6 +33,12 @@ def test_texts_come_from_the_translation_file(tmp_path):
     bad.write_text('{"entries": [{"id": "x", "ja": ["a"], "ko": ["a", "b"]}]}', encoding="utf-8")
     with pytest.raises(sd.ShopDescError, match="7"):
         sd.load_texts(bad)
+    import json
+    d = json.loads(TEXTS.read_text(encoding="utf-8"))
+    d["entries"].reverse()
+    bad.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(sd.ShopDescError, match="id"):
+        sd.load_texts(bad)
 
 
 source = pytest.mark.skipif(not CUE.exists(), reason="원본 디스크 없음")

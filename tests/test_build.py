@@ -107,4 +107,46 @@ def test_shop_build_changes_only_the_two_shop_files(tmp_path):
     offs = sd.picture_offsets(sl0, len(shop))
     assert all((sd.read_panel(shop, o) == sd.render_panel(t, colours)).all() for o, t in zip(offs, descs))
     build.check_shop(first, sl0, shop0, read(user, files["SL.BIN"]), shop)      # final vs original
+    from fromance import shopmark as mk
+    off = mk.mark_offset(sl0, len(shop))
+    assert shop[off:off + 256] == mk.arrow_icon().tobytes()
+    from fromance import shopmsg as sg
+    msg = sg.Layout.read(first, sl0)
+    lines = sg.load_texts(ROOT / "translation/graphics/shop_msg.json")
+    got = sg.decode_lines(msg, read(user, files["SL.BIN"]), shop)
+    assert all((g == sg.render_line(t, ln.cols * 8, ln.x, ln.align, msg.colours)).all()
+               for g, t, ln in zip(got, lines, msg.lines))
+    button = sg.decode_button(msg, read(user, files["SL.BIN"]), shop)
+    assert (button == sg.render_button(lines[-1], sg.decode_button(msg, sl0, shop0))).all()
     assert m["components"]["shop"] is True and m["distribution"] is False
+
+
+def test_shop_check_refuses_overlapping_or_stray_changes():
+    from fromance import shopmenu as sm
+    src = SourceDisc(CUE)
+    try:
+        files = iso9660.list_files(src.user)
+        read = lambda n: src.read_file(files[n].lba, files[n].size)
+        first, sl0, shop0 = read("1ST.BIN"), read("SL.BIN"), read("SHOPDAT.BIN")
+    finally:
+        src.close()
+    sl, shop = build.shop_files(first, sl0, shop0)
+    build.check_shop(first, sl0, shop0, sl, shop)
+    mods = build.shop_masks(first, sl0, shop0)
+    for a in mods:                    # no module writes what another writes or keeps
+        for b in mods:
+            if a is not b:
+                assert not (a.write_sl & (b.write_sl | b.keep_sl)).any()
+                assert not (a.write_shop & (b.write_shop | b.keep_shop)).any()
+    frame = sm.cell_offset(4)         # a menu frame cell: kept by the menu, written by nobody
+    assert not any(m.write_shop[frame] for m in mods)
+    with pytest.raises(build.BuildError, match="SHOPDAT.BIN byte"):
+        build.check_shop(first, sl0, shop0, sl, shop[:frame] + bytes([shop[frame] ^ 1]) + shop[frame + 1:])
+    with pytest.raises(build.BuildError, match="SL.BIN byte"):
+        build.check_shop(first, sl0, shop0, sl[:5] + bytes([sl[5] ^ 1]) + sl[6:], shop)
+    with pytest.raises(build.BuildError, match="size"):
+        build.check_shop(first, sl0, shop0, sl, shop + b"\0")
+    w = next(i for i, m in enumerate(mods[0].write_sl) if m)        # a menu text word -> frame cell
+    bad = sl[:w] + (4 - 2).to_bytes(2, "big") + sl[w + 2:]
+    with pytest.raises(build.BuildError, match="points at"):
+        build.check_shop(first, sl0, shop0, bad, shop)
