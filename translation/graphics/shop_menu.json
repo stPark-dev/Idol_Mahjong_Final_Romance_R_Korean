@@ -1,0 +1,10 @@
+{
+  "note": "상점 MENU 품목 이름(그림 글자, SHOPDAT.BIN·SL.BIN). state proposed = 사람 승인 전 제안, 시험 디스크에만 쓴다. 칸 폭: 1·2번 152px, 3번 112px(LV1부터 가격까지는 원본 유지), 4·5번 144px.",
+  "entries": [
+    {"id": "shop.item.1", "ja": "牌交換シール", "ko": "패 교환 스티커", "state": "proposed"},
+    {"id": "shop.item.2", "ja": "牌透視目薬MISE", "ko": "패 투시 안약 MISE", "state": "proposed"},
+    {"id": "shop.item.3", "ja": "積み込み招き猫", "ko": "쌓기 복고양이", "state": "proposed", "note": "뒤의 「LV1」(레벨 따라 LV2·LV3)과 가격은 원본 그림 그대로"},
+    {"id": "shop.item.4", "ja": "ドラドラ手りゅう弾", "ko": "도라도라 수류탄", "state": "proposed"},
+    {"id": "shop.item.5", "ja": "クリスタル立直棒", "ko": "크리스탈 리치봉", "state": "proposed"}
+  ]
+}

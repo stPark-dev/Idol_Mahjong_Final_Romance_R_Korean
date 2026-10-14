@@ -6,13 +6,15 @@ import re
 import shutil
 from pathlib import Path
 
-from . import cdsector, iso9660, subtitles
+from . import cdsector, iso9660, shopdesc, shopmenu, subtitles
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
 ROOT = Path(__file__).resolve().parents[2]
 SUB_BIN = ROOT / "assets/subtitle/SUB.BIN"
 VOICE_DIR = ROOT / "translation/voice"
+SHOP_MENU = ROOT / "translation/graphics/shop_menu.json"
+SHOP_DESC = ROOT / "translation/graphics/shop_desc.json"
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -43,6 +45,15 @@ def subtitle_parts(disc: SourceDisc, files: dict, text: str) -> tuple[bytes, dic
     packs = subtitles.build_packs(subtitles.voice_movies(VOICE_DIR, text=text), subtitles.movie_rows(first))
     sub = subtitles.fill_pack_sizes(SUB_BIN.read_bytes(), subtitles.pack_sizes(packs))
     return subtitles.patch_first(first, sub), packs
+
+
+def check_shop(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes) -> None:
+    """Final shop files against the originals: with the description panels put back, only the
+    menu may differ (shopmenu); the panels may differ only in panel colours (shopdesc)."""
+    offs = shopdesc.picture_offsets(sl0, len(shop0))
+    menu_only = shopdesc.apply(shop, offs, [shopdesc.read_panel(shop0, o) for o in offs])
+    shopmenu.check_protected(shopmenu.Layout.read(first, sl0), sl0, shop0, sl, menu_only)
+    shopdesc.check_protected(offs, menu_only, shop)
 
 
 def build(source_cue: Path, out_dir: Path, components: dict) -> dict:
@@ -78,6 +89,18 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
             placed.append((name, lba, len(data)))
             report[name] = {"lba": lba, "size": len(data)}
             lba += n
+    if components.get("shop"):
+        read = lambda n: disc.read_file(files[n].lba, files[n].size)
+        first, sl0, shop0 = read("1ST.BIN"), read("SL.BIN"), read("SHOPDAT.BIN")
+        try:
+            sl, shop = shopmenu.build_files(first, sl0, shop0, shopmenu.load_texts(SHOP_MENU))
+            shop = shopdesc.build_file(first, sl0, shop, shopdesc.load_texts(SHOP_DESC))
+            check_shop(first, sl0, shop0, sl, shop)
+        except (shopmenu.ShopMenuError, shopdesc.ShopDescError) as ex:
+            raise BuildError(str(ex)) from ex
+        for name, data in (("SL.BIN", sl), ("SHOPDAT.BIN", shop)):
+            _merge(writes, _file_sectors(name, files[name].lba, data, disc.user), name)
+            report[name] = {"replaced": True, "size": len(data)}
     if sizes or placed:
         try:
             _merge(writes, iso9660.repack_root(disc.user, sizes, placed), "root directory")

@@ -77,3 +77,34 @@ def test_subtitle_build_lays_out_files_and_hooks(built):
         assert movies and {rows[m][0] for m in movies} == {r}
     assert m["subtitles"] == "ja" and m["distribution"] is False
     assert json.loads((out / "manifest.json").read_text())["output_sha1"] == _sha1(out / m["output_bin"])
+
+
+def test_shop_build_changes_only_the_two_shop_files(tmp_path):
+    from fromance import shopdesc as sd, shopmenu as sm
+    m = build.build(CUE, tmp_path, {"subtitles": None, "shop": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+        data = [n for n in old if old[n].lba < src.sectors]          # CDDA entries point at audio tracks
+        changed = {n for n in data if n in files and read(user, files[n]) != read(src.user, old[n])}
+        assert changed == {"SL.BIN", "SHOPDAT.BIN"}
+        first = read(src.user, old["1ST.BIN"])
+        sl0 = read(src.user, old["SL.BIN"])
+        shop0 = read(src.user, old["SHOPDAT.BIN"])
+        lay = sm.Layout.read(first, sl0)
+    finally:
+        src.close()
+    texts = sm.load_texts(ROOT / "translation/graphics/shop_menu.json")
+    got = sm.decode_items(lay, read(user, files["SL.BIN"]), read(user, files["SHOPDAT.BIN"]))
+    want = [sm.render_text(t, it.cells * 8, it.ramp) for t, it in zip(texts, lay.items)]
+    assert len(got) == len(want) == 5 and all((a == b).all() for a, b in zip(got, want))
+    shop = read(user, files["SHOPDAT.BIN"])
+    colours = sd.panel_colours(first, sl0)
+    descs = sd.load_texts(ROOT / "translation/graphics/shop_desc.json")
+    offs = sd.picture_offsets(sl0, len(shop))
+    assert all((sd.read_panel(shop, o) == sd.render_panel(t, colours)).all() for o, t in zip(offs, descs))
+    build.check_shop(first, sl0, shop0, read(user, files["SL.BIN"]), shop)      # final vs original
+    assert m["components"]["shop"] is True and m["distribution"] is False
