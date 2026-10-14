@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import cdsector, iso9660, shopdesc, shopmark, shopmenu, shopmsg, subtitles
+from . import cdsector, iso9660, mjdeclare, mjmenu, shopdesc, shopmark, shopmenu, shopmsg, subtitles
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
@@ -19,6 +19,10 @@ VOICE_DIR = ROOT / "translation/voice"
 SHOP_MENU = ROOT / "translation/graphics/shop_menu.json"
 SHOP_DESC = ROOT / "translation/graphics/shop_desc.json"
 SHOP_MSG = ROOT / "translation/graphics/shop_msg.json"
+MJ_CALL = ROOT / "translation/graphics/mj_call.json"
+MJ_DECLARE = ROOT / "translation/graphics/mj_declare.json"
+GRAPHICS_ERRORS = (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError,
+                   mjmenu.MjMenuError, mjdeclare.MjDeclareError)
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -69,43 +73,87 @@ def shop_files(first: bytes, sl0: bytes, shop0: bytes) -> tuple[bytes, bytes]:
     return sl, shop
 
 
-def shop_masks(first: bytes, sl0: bytes, shop0: bytes) -> list[ShopMasks]:
-    """Write and keep masks of the menu, message, description and owned-mark modules."""
+def graphics_masks(first: bytes, sl0: bytes, shop0: bytes, components: dict) -> list[ShopMasks]:
+    """Write and keep masks of every enabled graphics module (shop: menu, message, description,
+    owned mark; mahjong: call window)."""
     n_sl, n_shop = len(sl0), len(shop0)
-    menu, msg = shopmenu.Layout.read(first, sl0), shopmsg.Layout.read(first, sl0)
-    offs = shopdesc.picture_offsets(sl0, n_shop)
-    return [ShopMasks(*shopmenu.editable(menu, n_sl, n_shop), *shopmenu.kept(menu, first, n_sl, n_shop)),
-            ShopMasks(*shopmsg.editable(msg, n_sl, n_shop), *shopmsg.kept(msg, first, n_sl, n_shop)),
-            ShopMasks(np.zeros(n_sl, bool), shopdesc.editable(offs, n_shop), *shopdesc.kept(offs, n_sl, n_shop)),
-            ShopMasks(np.zeros(n_sl, bool), shopmark.editable(shopmark.mark_offset(sl0, n_shop), n_shop),
-                      *shopmark.kept(n_sl, n_shop))]
+    out = []
+    if components.get("shop"):
+        menu, msg = shopmenu.Layout.read(first, sl0), shopmsg.Layout.read(first, sl0)
+        offs = shopdesc.picture_offsets(sl0, n_shop)
+        out += [ShopMasks(*shopmenu.editable(menu, n_sl, n_shop), *shopmenu.kept(menu, first, n_sl, n_shop)),
+                ShopMasks(*shopmsg.editable(msg, n_sl, n_shop), *shopmsg.kept(msg, first, n_sl, n_shop)),
+                ShopMasks(np.zeros(n_sl, bool), shopdesc.editable(offs, n_shop), *shopdesc.kept(offs, n_sl, n_shop)),
+                ShopMasks(np.zeros(n_sl, bool), shopmark.editable(shopmark.mark_offset(sl0, n_shop), n_shop),
+                          *shopmark.kept(n_sl, n_shop))]
+    if components.get("mahjong"):
+        call = mjmenu.Layout.read(first, sl0)
+        out.append(ShopMasks(mjmenu.editable(call, n_sl), np.zeros(n_shop, bool),
+                             mjmenu.kept(call, n_sl), np.zeros(n_shop, bool)))
+        frames = mjdeclare.read_frames(first, sl0)
+        out.append(ShopMasks(mjdeclare.editable(frames, n_sl), np.zeros(n_shop, bool),
+                             mjdeclare.kept(first, n_sl), np.zeros(n_shop, bool)))
+    return out
 
 
-def check_shop(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes) -> None:
-    """Final shop files against the originals: no module writes a byte another module writes
-    or relies on, no other byte changed, and every rewritten map entry or panel pixel is one
-    the game can show."""
+def shop_masks(first: bytes, sl0: bytes, shop0: bytes) -> list[ShopMasks]:
+    """Write and keep masks of the shop modules."""
+    return graphics_masks(first, sl0, shop0, {"shop": True})
+
+
+def graphics_files(first: bytes, sl0: bytes, shop0: bytes, components: dict) -> tuple[bytes, bytes]:
+    """SL.BIN and SHOPDAT.BIN with every enabled graphics module applied; every layout is read
+    from the original files."""
+    sl, shop = shop_files(first, sl0, shop0) if components.get("shop") else (sl0, shop0)
+    if components.get("mahjong"):
+        sl = mjmenu.build_file(first, sl, mjmenu.load_texts(MJ_CALL), base_sl=sl0)
+        sl = mjdeclare.build_file(first, sl, mjdeclare.load_texts(MJ_DECLARE), base_sl=sl0)
+    return sl, shop
+
+
+def _only(base: bytes, new: bytes, mask: np.ndarray) -> bytes:
+    """base with new's bytes where mask is set: one module's changes on their own."""
+    out = np.frombuffer(base, np.uint8).copy()
+    out[mask] = np.frombuffer(new, np.uint8)[mask]
+    return out.tobytes()
+
+
+def check_graphics(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes, components: dict) -> None:
+    """Final SL.BIN and SHOPDAT.BIN against the originals: no module writes a byte another
+    module writes or relies on, no other byte changed, and every rewritten map entry or pixel
+    is one the game can show."""
     if len(sl) != len(sl0) or len(shop) != len(shop0):
-        raise BuildError("protected: shop file size changed")
+        raise BuildError("protected: SL.BIN or SHOPDAT.BIN size changed")
     try:
-        mods = shop_masks(first, sl0, shop0)
+        mods = graphics_masks(first, sl0, shop0, components)
         for a in mods:
             for b in mods:
                 if a is not b and ((a.write_sl & (b.write_sl | b.keep_sl)).any()
                                    or (a.write_shop & (b.write_shop | b.keep_shop)).any()):
-                    raise BuildError("protected: a shop module may change bytes another module uses")
+                    raise BuildError("protected: a graphics module may change bytes another module uses")
         sl_ok = np.logical_or.reduce([m.write_sl for m in mods])
         shop_ok = np.logical_or.reduce([m.write_shop for m in mods])
         for name, a, b, ok in (("SL.BIN", sl0, sl, sl_ok), ("SHOPDAT.BIN", shop0, shop, shop_ok)):
             stray = np.flatnonzero((np.frombuffer(a, np.uint8) != np.frombuffer(b, np.uint8)) & ~ok)
             if len(stray):
                 raise BuildError(f"protected: {name} byte {int(stray[0]):#x} changed")
-        shopmenu.check_targets(shopmenu.Layout.read(first, sl0), sl)
-        shopmsg.check_targets(shopmsg.Layout.read(first, sl0), sl)
-        shopdesc.check_colours(shopdesc.picture_offsets(sl0, len(shop0)), shop)
-        shopmark.check_colours(shopmark.mark_offset(sl0, len(shop0)), shop)
-    except (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError) as ex:
+        if components.get("shop"):
+            shopmenu.check_targets(shopmenu.Layout.read(first, sl0), sl)
+            shopmsg.check_targets(shopmsg.Layout.read(first, sl0), sl)
+            shopdesc.check_colours(shopdesc.picture_offsets(sl0, len(shop0)), shop)
+            shopmark.check_colours(shopmark.mark_offset(sl0, len(shop0)), shop)
+        if components.get("mahjong"):
+            call = mjmenu.Layout.read(first, sl0)
+            mjmenu.check_protected(call, sl0, _only(sl0, sl, mjmenu.editable(call, len(sl0))))
+            frames = mjdeclare.read_frames(first, sl0)
+            mjdeclare.check_protected(frames, sl0, _only(sl0, sl, mjdeclare.editable(frames, len(sl0))))
+    except GRAPHICS_ERRORS as ex:
         raise BuildError(str(ex)) from ex
+
+
+def check_shop(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes) -> None:
+    """check_graphics for the shop modules alone."""
+    check_graphics(first, sl0, shop0, sl, shop, {"shop": True})
 
 
 def build(source_cue: Path, out_dir: Path, components: dict) -> dict:
@@ -141,17 +189,18 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
             placed.append((name, lba, len(data)))
             report[name] = {"lba": lba, "size": len(data)}
             lba += n
-    if components.get("shop"):
+    if components.get("shop") or components.get("mahjong"):
         read = lambda n: disc.read_file(files[n].lba, files[n].size)
         first, sl0, shop0 = read("1ST.BIN"), read("SL.BIN"), read("SHOPDAT.BIN")
         try:
-            sl, shop = shop_files(first, sl0, shop0)
-            check_shop(first, sl0, shop0, sl, shop)
-        except (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError) as ex:
+            sl, shop = graphics_files(first, sl0, shop0, components)
+        except GRAPHICS_ERRORS as ex:
             raise BuildError(str(ex)) from ex
-        for name, data in (("SL.BIN", sl), ("SHOPDAT.BIN", shop)):
-            _merge(writes, _file_sectors(name, files[name].lba, data, disc.user), name)
-            report[name] = {"replaced": True, "size": len(data)}
+        check_graphics(first, sl0, shop0, sl, shop, components)
+        for name, data, data0 in (("SL.BIN", sl, sl0), ("SHOPDAT.BIN", shop, shop0)):
+            if data != data0:
+                _merge(writes, _file_sectors(name, files[name].lba, data, disc.user), name)
+                report[name] = {"replaced": True, "size": len(data)}
     if sizes or placed:
         try:
             _merge(writes, iso9660.repack_root(disc.user, sizes, placed), "root directory")

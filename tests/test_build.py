@@ -150,3 +150,41 @@ def test_shop_check_refuses_overlapping_or_stray_changes():
     bad = sl[:w] + (4 - 2).to_bytes(2, "big") + sl[w + 2:]
     with pytest.raises(build.BuildError, match="points at"):
         build.check_shop(first, sl0, shop0, bad, shop)
+
+
+def test_mahjong_build_redraws_the_call_window_alongside_the_shop(tmp_path):
+    from fromance import mjmenu as mm
+    m = build.build(CUE, tmp_path, {"subtitles": None, "shop": True, "mahjong": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+        first, sl0, shop0 = read(src.user, old["1ST.BIN"]), read(src.user, old["SL.BIN"]), read(src.user, old["SHOPDAT.BIN"])
+    finally:
+        src.close()
+    sl, shop = read(user, files["SL.BIN"]), read(user, files["SHOPDAT.BIN"])
+    want = mm.build_file(first, sl0, mm.load_texts(ROOT / "translation/graphics/mj_call.json"))
+    lay = mm.Layout.read(first, sl0)
+    assert (mm.read_image(sl, lay) == mm.read_image(want, lay)).all()
+    from fromance import mjdeclare as md
+    frames = md.read_frames(first, sl0)
+    want = md.build_file(first, sl0, md.load_texts(ROOT / "translation/graphics/mj_declare.json"))
+    assert all(sl[f.off:f.off + f.w * f.h] == want[f.off:f.off + f.w * f.h] for k in frames for f in k)
+    build.check_graphics(first, sl0, shop0, sl, shop, {"shop": True, "mahjong": True})
+    assert m["components"]["mahjong"] is True
+
+
+def test_mahjong_alone_leaves_the_shop_file_untouched(tmp_path):
+    m = build.build(CUE, tmp_path, {"subtitles": None, "mahjong": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+        changed = {n for n in old if old[n].lba < src.sectors and read(user, files[n]) != read(src.user, old[n])}
+    finally:
+        src.close()
+    assert changed == {"SL.BIN"} and "SHOPDAT.BIN" not in m["files"]

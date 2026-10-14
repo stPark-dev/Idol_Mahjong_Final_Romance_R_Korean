@@ -1,0 +1,11 @@
+{
+  "note": "대국 큰 선언(SL.BIN 256색 VDP1 입체 글자, 선언 함수 0x06014C90의 종류 0-5). 표기는 D-18.",
+  "entries": [
+    {"id": "mj.declare.kan", "ja": "カン", "ko": "깡", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.declare.pon", "ja": "ポン", "ko": "퐁", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.declare.chi", "ja": "チー", "ko": "치", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.declare.riichi", "ja": "リーチ", "ko": "리치", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.declare.ron", "ja": "ロン", "ko": "론", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.declare.tsumo", "ja": "ツモ", "ko": "쯔모", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"}
+  ]
+}

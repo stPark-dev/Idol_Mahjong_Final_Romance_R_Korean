@@ -1,0 +1,10 @@
+{
+  "note": "대국 부르기 창(SL.BIN VDP1 그림 104x48 16색, 스프라이트 표 0x06060000 1번). 표기는 D-18.",
+  "entries": [
+    {"id": "mj.call.pon", "ja": "ポン", "ko": "퐁", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.call.kan", "ja": "カン", "ko": "깡", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.call.chi", "ja": "チー", "ko": "치", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.call.ron", "ja": "ロン", "ko": "론", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.call.riichi", "ja": "リーチ", "ko": "리치", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"}
+  ]
+}
