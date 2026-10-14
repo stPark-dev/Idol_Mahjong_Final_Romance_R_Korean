@@ -1,5 +1,7 @@
-"""Movie subtitles: the subtitle pack ZSUB.DAT read by SUB.BIN, and the 1ST.BIN hooks.
+"""Movie subtitles: the subtitle packs ZSUB0-4.DAT read by SUB.BIN, and the 1ST.BIN hooks.
 
+One pack per row of the game's movie table (one character each); a movie sequence only plays
+movies of one row, so SUB.BIN loads just that row's pack.
 Pack layout read by tools/subtitle/sub.c (big-endian, every field 4-byte aligned); the whole
 file is loaded into VDP1 VRAM at PACK_VRAM, so srca/LUT addresses are absolute VRAM units:
   u32 MAGIC, u16 nmovies, u16 lut_srca, u32 total size,
@@ -27,7 +29,8 @@ BOTTOM_Y = 108                 # movie spans y -112..111 around the VDP1 local o
 SUPER = 4
 
 MAGIC = 0x46525331             # "FRS1"
-PACK_NAME = "ZSUB.DAT"         # sorts after every original file, so GFS file ids stay put
+ROWS = 5                       # character rows of the movie table
+PACK_NAME = "ZSUB{}.DAT"       # sorts after every original file, so GFS file ids stay put
 PACK_VRAM = 0x40000            # VDP1 VRAM offset; movies use 0x10000-0x33000
 VRAM_LIMIT = 0x7F000           # SGL keeps data at 0x7FF00
 MAX_CUES = 24
@@ -44,6 +47,13 @@ HOOKS = (                                                # (literal, original va
     (0x0600F5E4, 0x06004052, ENTRY_FRAME),               # slSynch call in the movie loop 0x0600F50C
     (0x0600F3E0, 0x0600F604, ENTRY_PREPARE),             # stream init of the movie sequence 0x0600F360
 )
+SEQUENCE_VARS = {                                        # byte address, its literals in 0x0600F360..0x0600F4AC
+    "MODE": (0x060D57BC, (0x0600F3EC,)),                 # sequence kind
+    "WIN_STEP": (0x060D75DE, (0x0600F440,)),             # kind 0: movie after a win
+    "CHAR": (0x060D75E0, (0x0600F444, 0x0600F484)),      # kinds 0, 2: table row
+    "ALBUM_CHAR": (0x060D00A7, (0x0600F4A4,)),           # kind 3: table row + 1
+}
+MOVIE_TABLE = 0x0600F964                                 # rows x 6 x {char *name, u32 flag}
 SIZE_MARKER = b"FRPACKSZ"
 
 
@@ -152,6 +162,47 @@ def build_pack(movies: dict[str, list[tuple[float, float, str]]], font_path: str
     return struct.pack(">IHHI", MAGIC, len(names), (PACK_VRAM + lut_at) // 8, total) + body
 
 
+def pack_name(row: int) -> str:
+    return PACK_NAME.format(row)
+
+
+def movie_rows(first: bytes) -> dict[str, tuple[int, int]]:
+    """{movie stem: (table row, index in the row)} from the movie table of the original 1ST.BIN."""
+    out = {}
+    for r in range(ROWS):
+        for k in range(6):
+            p = struct.unpack_from(">I", first, MOVIE_TABLE - FIRST_BASE + 48 * r + 8 * k)[0]
+            if not FIRST_BASE <= p < FIRST_BASE + len(first):
+                continue
+            o = p - FIRST_BASE
+            end = first.find(b"\0", o)
+            if end < 0:
+                raise SubtitleError(f"movie table row {r}: name at {p:#x} runs past the end of 1ST.BIN")
+            name = first[o:end].decode("latin-1")
+            if name.endswith(".CPK"):
+                if name[:-4] in out:
+                    raise SubtitleError(f"movie table: {name} listed twice")
+                out[name[:-4]] = (r, k)
+    return out
+
+
+def build_packs(movies: dict[str, list[tuple[float, float, str]]], rows: dict[str, tuple[int, int]],
+                font_path: str = FONT) -> dict[str, bytes]:
+    """{pack name: pack} for every table row that has subtitled movies."""
+    missing = sorted(set(movies) - set(rows))
+    if missing:
+        raise SubtitleError(f"movies not in the movie table: {missing}")
+    openings = sorted(m for m in movies if rows[m][1] == 0)
+    if openings:   # the demo sequence (kind 1) plays only these and SUB.BIN loads no pack for it
+        raise SubtitleError(f"subtitles on opening movies are not supported: {openings}")
+    return {pack_name(r): build_pack({m: c for m, c in movies.items() if rows[m][0] == r}, font_path)
+            for r in range(ROWS) if any(rows[m][0] == r for m in movies)}
+
+
+def pack_sizes(packs: dict[str, bytes]) -> list[int]:
+    return [len(packs.get(pack_name(r), b"")) for r in range(ROWS)]
+
+
 def lut_offset(pack: bytes) -> int:
     return struct.unpack_from(">H", pack, 6)[0] * 8 - PACK_VRAM
 
@@ -168,13 +219,16 @@ def voice_movies(voice_dir: Path, text: str = "ko") -> dict[str, list[tuple[floa
     return {k: sorted(v) for k, v in sorted(out.items())}
 
 
-def fill_pack_size(sub_bin: bytes, size: int) -> bytes:
-    if not 0 < size <= VRAM_LIMIT - PACK_VRAM:
-        raise SubtitleError(f"bad pack size {size}")
+def fill_pack_sizes(sub_bin: bytes, sizes: list[int]) -> bytes:
+    """SUB.BIN with the pack size of every table row (0: no pack) after the marker."""
+    if len(sizes) != ROWS or any(not 0 <= n <= VRAM_LIMIT - PACK_VRAM for n in sizes):
+        raise SubtitleError(f"bad pack sizes {sizes}")
     i = sub_bin.index(SIZE_MARKER) + len(SIZE_MARKER)
-    if sub_bin[i:i + 4] != bytes(4):
-        raise SubtitleError("pack size already filled")
-    return sub_bin[:i] + struct.pack(">I", size) + sub_bin[i + 4:]
+    if len(sub_bin) < i + 4 * ROWS:
+        raise SubtitleError("SUB.BIN has no room for the pack sizes; rebuild it (tools/subtitle/build.sh)")
+    if sub_bin[i:i + 4 * ROWS] != bytes(4 * ROWS):
+        raise SubtitleError("pack sizes already filled")
+    return sub_bin[:i] + struct.pack(f">{ROWS}I", *sizes) + sub_bin[i + 4 * ROWS:]
 
 
 def patch_first(first: bytes, sub_bin: bytes) -> bytes:
@@ -184,6 +238,10 @@ def patch_first(first: bytes, sub_bin: bytes) -> bytes:
     if len(sub_bin) > FIRST_SLACK:
         raise SubtitleError(f"SUB.BIN is {len(sub_bin)} bytes, the last sector has {FIRST_SLACK} spare")
     out = bytearray(first)
+    for value, lits in SEQUENCE_VARS.values():
+        for lit in lits:
+            if struct.unpack_from(">I", out, lit - FIRST_BASE)[0] != value:
+                raise SubtitleError(f"1ST.BIN {lit:#x}: expected literal {value:#x}")
     for lit, orig, entry in HOOKS:
         new = SUB_BASE + entry
         o = lit - FIRST_BASE

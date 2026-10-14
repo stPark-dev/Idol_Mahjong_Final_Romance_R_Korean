@@ -38,10 +38,11 @@ def _merge(writes: dict, secs: dict, name: str) -> None:
 
 def subtitle_parts(disc: SourceDisc, files: dict, text: str) -> tuple[bytes, dict[str, bytes]]:
     """New 1ST.BIN and {new file name: data}."""
-    pack = subtitles.build_pack(subtitles.voice_movies(VOICE_DIR, text=text))
-    sub = subtitles.fill_pack_size(SUB_BIN.read_bytes(), len(pack))
     e = files["1ST.BIN"]
-    return subtitles.patch_first(disc.read_file(e.lba, e.size), sub), {subtitles.PACK_NAME: pack}
+    first = disc.read_file(e.lba, e.size)
+    packs = subtitles.build_packs(subtitles.voice_movies(VOICE_DIR, text=text), subtitles.movie_rows(first))
+    sub = subtitles.fill_pack_sizes(SUB_BIN.read_bytes(), subtitles.pack_sizes(packs))
+    return subtitles.patch_first(first, sub), packs
 
 
 def build(source_cue: Path, out_dir: Path, components: dict) -> dict:

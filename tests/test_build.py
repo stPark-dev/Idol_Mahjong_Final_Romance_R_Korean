@@ -55,16 +55,25 @@ def test_subtitle_build_lays_out_files_and_hooks(built):
     # existing files keep place and order; new ones follow YAKU.BIN
     assert [n for n in files if n in old] == list(old)
     new = [n for n in files if n not in old]
-    assert new == [st.PACK_NAME] and files[st.PACK_NAME].lba == 63428
-    assert files[st.PACK_NAME].lba + files[st.PACK_NAME].sectors <= 63578
+    rows = st.movie_rows(src.read_file(22, 344184))
+    subtitled = {rows[m][0] for m in st.voice_movies(ROOT / "translation/voice", text="ja")}
+    names = [st.pack_name(r) for r in sorted(subtitled)]
+    assert new == names and files[names[0]].lba == 63428
+    assert files[names[-1]].lba + files[names[-1]].sectors <= 63578
     first = files["1ST.BIN"]
     assert first.lba == 22 and first.sectors == 169
     data = b"".join(user(first.lba + i) for i in range(first.sectors))[:first.size]
     orig = src.read_file(22, 344184)
-    sub = st.fill_pack_size((ROOT / "assets/subtitle/SUB.BIN").read_bytes(), files[st.PACK_NAME].size)
+    sizes = [files[st.pack_name(r)].size if st.pack_name(r) in files else 0 for r in range(st.ROWS)]
+    sub = st.fill_pack_sizes((ROOT / "assets/subtitle/SUB.BIN").read_bytes(), sizes)
     assert data == st.patch_first(orig, sub)
-    pe = files[st.PACK_NAME]
-    pack = b"".join(user(pe.lba + i) for i in range(pe.sectors))[:pe.size]
-    assert struct.unpack_from(">I", pack)[0] == st.MAGIC
+    for n in names:
+        r = int(n[4])
+        pe = files[n]
+        pack = b"".join(user(pe.lba + i) for i in range(pe.sectors))[:pe.size]
+        magic, nmovies = struct.unpack_from(">IH", pack)
+        assert magic == st.MAGIC
+        movies = {pack[12 + 12 * i:16 + 12 * i].decode() for i in range(nmovies)}
+        assert movies and {rows[m][0] for m in movies} == {r}
     assert m["subtitles"] == "ja" and m["distribution"] is False
     assert json.loads((out / "manifest.json").read_text())["output_sha1"] == _sha1(out / m["output_bin"])
