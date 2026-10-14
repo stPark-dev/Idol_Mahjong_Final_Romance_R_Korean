@@ -187,4 +187,31 @@ def test_mahjong_alone_leaves_the_shop_file_untouched(tmp_path):
         changed = {n for n in old if old[n].lba < src.sectors and read(user, files[n]) != read(src.user, old[n])}
     finally:
         src.close()
-    assert changed == {"SL.BIN"} and "SHOPDAT.BIN" not in m["files"]
+    assert changed == {"SL.BIN", "1ST.BIN"} and "SHOPDAT.BIN" not in m["files"]   # draw words live in 1ST.BIN
+
+
+@pytest.mark.parametrize("text", [None, "ko"])
+def test_mahjong_draw_words_live_in_1st_bin_with_or_without_subtitles(tmp_path, text):
+    from fromance import mjdraw as mw
+    m = build.build(CUE, tmp_path, {"subtitles": text, "mahjong": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    src = SourceDisc(CUE)
+    try:
+        first0 = src.read_file(22, 344184)
+    finally:
+        src.close()
+    e = files["1ST.BIN"]
+    first = b"".join(user(e.lba + i) for i in range(e.sectors))[:e.size]
+    want = mw.build_file(first0, mw.load_texts(ROOT / "translation/graphics/mj_draw.json"))
+    if text:                          # the subtitle hooks sit on top of the redrawn draw words
+        assert len(first) > st.FIRST_SIZE
+        assert [struct.unpack_from(">I", first, lit - st.FIRST_BASE)[0] for lit, _, _ in st.HOOKS] == \
+            [st.SUB_BASE + entry for _, _, entry in st.HOOKS]
+    else:
+        assert first == want
+    lay = mw.Layout.read(first0)
+    got, ref = mw.decode_maps(lay, first[:st.FIRST_SIZE]), mw.decode_maps(lay, want)
+    assert len(got) == len(ref) == 5 and all((a == b).all() for a, b in zip(got, ref))
+    mw.check_protected(lay, first0, first[:st.FIRST_SIZE] if not text else
+                       mw.apply(lay, first0, got))

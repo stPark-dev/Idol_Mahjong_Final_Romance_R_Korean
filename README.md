@@ -33,7 +33,7 @@
 | 동영상 자막 표시 | `1ST.BIN` 끝에 붙인 상주 코드(708바이트)가 동영상 묶음 시작 전에 그 묶음이 재생할 캐릭터의 자막 묶음(`ZSUB0–4.DAT`)만 VDP1 VRAM으로 읽고, 재생 중 매 프레임 재생 시각(1/600초)에 맞는 줄을 VDP1 스프라이트로 얹음 | **시험 디스크로 26편 64줄 모두 확인**(짧은 줄 포함, [한국어 예](docs/testdisc-ko-ri01.png)). 동영상 뒤 상점·대국·엔딩·앨범·프로필 화면 정상. 세이브 스테이트를 고쳐 재생한 결과이며, 실제로 이겨서 들어간 경로와 실기는 미확인. 묶음 시작 대기는 원본보다 약 0.29초 김(D-12로 0.69초에서 줄임) |
 | 타이틀 로고 | 제공 그림 `title_ko.png`로 교체(D-3) | 로고 그림의 저장 위치 조사 전 |
 | 상점·대국·프로필·옷 갈아입히기·엔딩 화면 | 화면 글자는 모두 그림(폰트 엔진 없음), 압축 없음. 목록은 [`docs/initial-survey.md`](docs/initial-survey.md) §3 | **글자 목록 조사 완료**. 상점의 일본어 글자(품목 이름 5개, 품목 설명 7장, 환영·작별 안내, 「시작」 단추, 산 품목 ↔ 표시)는 모두 한국어 그림으로 바꾸는 시험 성공([메뉴](docs/testdisc-ko-shop.png)·[설명](docs/testdisc-ko-shop-desc.png)·[안내](docs/testdisc-ko-shop-msg.png), 번역 제안 상태). 대국 화료(ロン/ツモ)·역 이름·점수 화면은 아직 못 봄 |
-| 대국 화면 | 부르기 창, 큰 선언(퐁·깡·치·론·쯔모·리치), 유국·텐파이·노텐, 화료·역·점수 | 부르기 창과 큰 선언 6종(깡·퐁·치·리치·론·쯔모, 입체 글자를 프로그램으로 그림, D-19)은 한국어 교체 시험 성공([부르기](docs/testdisc-ko-mj-call.png)·[선언](docs/testdisc-ko-mj-tsumo.png)). 유국·텐파이·노텐과 화료 화면은 남음 |
+| 대국 화면 | 부르기 창, 큰 선언(퐁·깡·치·론·쯔모·리치), 유국·텐파이·노텐, 화료·역·점수 | 부르기 창, 큰 선언 6종(깡·퐁·치·리치·론·쯔모), 유국·텐파이·노텐은 한국어 교체 시험 성공(입체 글자는 프로그램으로 그림, D-19; [부르기](docs/testdisc-ko-mj-call.png)·[선언](docs/testdisc-ko-mj-tsumo.png)·[유국](docs/testdisc-ko-mj-draw.png)). 화료·역 이름·점수 화면은 아직 못 봄 |
 | 이어하기·앨범 틀·타이틀 메뉴·옵션 | 영어만 있음 | 바꿀 것 없음 |
 
 조사 내용은 [`docs/initial-survey.md`](docs/initial-survey.md), 프로젝트 소유자 결정은 [`docs/decisions.md`](docs/decisions.md)에 있습니다.
@@ -50,7 +50,7 @@
 | [`translation/graphics/shop_menu.json`](translation/graphics/shop_menu.json) | 상점 품목 이름 5개 (제안) |
 | [`translation/graphics/shop_desc.json`](translation/graphics/shop_desc.json) | 상점 품목 설명 7장 × 3줄 (제안) |
 | [`translation/graphics/shop_msg.json`](translation/graphics/shop_msg.json) | 상점 환영 3줄·작별 2줄 (제안) |
-| [`translation/graphics/mj_call.json`](translation/graphics/mj_call.json), [`mj_declare.json`](translation/graphics/mj_declare.json) | 대국 부르기 창 5개·큰 선언 6개 (승인, D-18) |
+| [`translation/graphics/mj_call.json`](translation/graphics/mj_call.json), [`mj_declare.json`](translation/graphics/mj_declare.json), [`mj_draw.json`](translation/graphics/mj_draw.json) | 대국 부르기 창 5개·큰 선언 6개·유국 글자 3개 (승인, D-18) |
 
 각 줄에는 동영상 이름, 시작·끝 시각(초), 화자, 일본어 원문(`ja`), 한국어(`ko`), 상태(`reviewed` 등)가 있습니다. 2차 검수로 바뀐 줄에는 바뀌기 전 초벌(`ko_draft`)과 결정 근거(`ko_decision`)가 남아 있습니다. 받아쓰기는 faster-whisper large-v3(인식 힌트 있음/없음)와 kotoba-whisper v2.0 세 벌을 대조해 정했습니다. 모델끼리 갈려 확정하지 못한 줄에는 `flags: ["asr_uncertain"]`과 후보를 적은 `note`가 붙어 있습니다(케이트 4줄).
 
@@ -63,7 +63,7 @@
 | [`tools/asr/`](tools/asr/) | 동영상 음성 받아쓰기(`asr.py`: 파일 전체, `asr_slice.py`: 구간 재인식). faster-whisper와 CUDA가 필요하며 `work/audio16/*.wav`(동영상에서 뽑은 16kHz 음성)를 읽습니다. |
 | [`tools/khpatch.py`](tools/khpatch.py) | 빌드: `python3 tools/khpatch.py build --source <원본.cue> --out <폴더> --subtitles ja\|ko\|none`. 원본 1번 트랙 SHA-1을 확인하고, 바뀐 섹터만 EDC/ECC를 다시 계산해 쓰기 계획으로 적용·감사합니다. 2–16번 트랙은 하드 링크(안 되면 복사)합니다. `--subtitles ja`는 일본어 원문을 띄우는 시험판이고, `none`은 원본과 바이트 단위로 같은 이미지를 만듭니다. |
 | [`tools/fromance/`](tools/fromance/) | 빌드 모듈: 원본 검사(`disc.py`), ISO9660 루트 디렉터리 읽기·다시 짜기(`iso9660.py`), Mode 1 섹터 EDC/ECC(`cdsector.py`), 쓰기 계획(`writeplan.py`), 자막 그림·묶음·`1ST.BIN` 연결(`subtitles.py`) |
-| [`tools/fromance/mjmenu.py`](tools/fromance/mjmenu.py), [`mjdeclare.py`](tools/fromance/mjdeclare.py) | 대국 부르기 창·큰 선언 그림 교체(`--mahjong`, 시험용) |
+| [`tools/fromance/mjmenu.py`](tools/fromance/mjmenu.py), [`mjdeclare.py`](tools/fromance/mjdeclare.py), [`mjdraw.py`](tools/fromance/mjdraw.py) | 대국 부르기 창·큰 선언·유국 글자 그림 교체(`--mahjong`, 시험용) |
 | [`tools/fromance/shopmenu.py`](tools/fromance/shopmenu.py), [`shopdesc.py`](tools/fromance/shopdesc.py), [`shopmsg.py`](tools/fromance/shopmsg.py), [`shopmark.py`](tools/fromance/shopmark.py) | 상점 품목 이름·설명·안내·단추·산 품목 표시 그림 교체(`--shop`, 시험용). 셀 `SHOPDAT.BIN`과 배치 표 `SL.BIN`, 설명 그림의 글자 상자를 같은 크기로 바꾸고, 빌드가 원본 대비 바뀐 바이트를 검사 |
 | [`tools/subtitle/`](tools/subtitle/) | 상주 자막 코드(`crt.S`, `sub.c`, `sub.ld`). `docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/w" -w /w khsub sh tools/subtitle/build.sh`로 `assets/subtitle/SUB.BIN`을 만듭니다(SH-4용 gcc 13 이상, SH-2에 없는 명령 검사). |
 | [`tools/poc/`](tools/poc/) | 동영상 자막 PoC. 연결 코드(`crt.S`, `poc.c`)를 SH-4용 gcc 14로 빌드하고 SH-2에 없는 명령이 없는지 검사(`build.sh`, `check_sh2.py`), 시험 자막 그림을 만들어 Mednafen 세이브 스테이트에 넣습니다(`mkpoc.py`). gcc 12.2는 SH 코드를 잘못 컴파일하므로 쓰지 않습니다. |

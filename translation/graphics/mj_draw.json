@@ -1,0 +1,8 @@
+{
+  "note": "대국 유국 화면 글자(1ST.BIN 안 NBG2 256색 셀·바이트 배치 표 1-5). 표기는 D-18. 텐파이·노텐은 큰 것(배치 2·3)과 작은 것(4·5)이 있다.",
+  "entries": [
+    {"id": "mj.draw.ryuukyoku", "ja": "流局", "ko": "유국", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.draw.tenpai", "ja": "テンパイ", "ko": "텐파이", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"},
+    {"id": "mj.draw.noten", "ja": "ノーテン", "ko": "노텐", "state": "approved", "approved": "2026-10-14 프로젝트 소유자(D-18)"}
+  ]
+}

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import cdsector, iso9660, mjdeclare, mjmenu, shopdesc, shopmark, shopmenu, shopmsg, subtitles
+from . import cdsector, iso9660, mjdeclare, mjdraw, mjmenu, shopdesc, shopmark, shopmenu, shopmsg, subtitles
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
@@ -21,8 +21,9 @@ SHOP_DESC = ROOT / "translation/graphics/shop_desc.json"
 SHOP_MSG = ROOT / "translation/graphics/shop_msg.json"
 MJ_CALL = ROOT / "translation/graphics/mj_call.json"
 MJ_DECLARE = ROOT / "translation/graphics/mj_declare.json"
+MJ_DRAW = ROOT / "translation/graphics/mj_draw.json"
 GRAPHICS_ERRORS = (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError,
-                   mjmenu.MjMenuError, mjdeclare.MjDeclareError)
+                   mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError)
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -46,10 +47,20 @@ def _merge(writes: dict, secs: dict, name: str) -> None:
         writes[lba] = user
 
 
-def subtitle_parts(disc: SourceDisc, files: dict, text: str) -> tuple[bytes, dict[str, bytes]]:
-    """New 1ST.BIN and {new file name: data}."""
+def first_graphics(first: bytes, components: dict) -> bytes:
+    """1ST.BIN with the graphics text it holds itself (mahjong draw words) redrawn, same size."""
+    if not components.get("mahjong"):
+        return first
+    try:
+        return mjdraw.build_file(first, mjdraw.load_texts(MJ_DRAW))
+    except GRAPHICS_ERRORS as ex:
+        raise BuildError(str(ex)) from ex
+
+
+def subtitle_parts(disc: SourceDisc, files: dict, text: str, base: bytes = None) -> tuple[bytes, dict[str, bytes]]:
+    """New 1ST.BIN (built on base, the original by default) and {new file name: data}."""
     e = files["1ST.BIN"]
-    first = disc.read_file(e.lba, e.size)
+    first = disc.read_file(e.lba, e.size) if base is None else base
     packs = subtitles.build_packs(subtitles.voice_movies(VOICE_DIR, text=text), subtitles.movie_rows(first))
     sub = subtitles.fill_pack_sizes(SUB_BIN.read_bytes(), subtitles.pack_sizes(packs))
     return subtitles.patch_first(first, sub), packs
@@ -172,9 +183,20 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
     placed: list[tuple[str, int, int]] = []
     report: dict[str, dict] = {}
     text = components.get("subtitles")
+    e = files["1ST.BIN"]
+    first0 = disc.read_file(e.lba, e.size)
+    base = first_graphics(first0, components)
+    if base != first0 and not text:
+        _merge(writes, _file_sectors("1ST.BIN", e.lba, base, disc.user), "1ST.BIN")
+        report["1ST.BIN"] = {"replaced": True, "size": len(base)}
     if text:
-        first, added = subtitle_parts(disc, files, text)
-        e = files["1ST.BIN"]
+        first, added = subtitle_parts(disc, files, text, base)
+        if components.get("mahjong"):     # the subtitle patch must leave the draw words alone
+            lay = mjdraw.Layout.read(first0)
+            mask = mjdraw.editable(lay, len(first0))
+            same = np.frombuffer(first[:len(first0)], np.uint8)[mask] == np.frombuffer(base, np.uint8)[mask]
+            if not same.all():
+                raise BuildError("protected: the subtitle patch overwrote mahjong draw words in 1ST.BIN")
         if (len(first) + 2047) // 2048 != e.sectors:
             raise BuildError("1ST.BIN would need another sector")
         _merge(writes, _file_sectors("1ST.BIN", e.lba, first, disc.user), "1ST.BIN")
