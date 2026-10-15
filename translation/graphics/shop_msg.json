@@ -5,33 +5,33 @@
       "id": "shop.welcome.1",
       "ja": "いらっしゃいませ！",
       "ko": "어서 오세요!",
-      "state": "proposed"
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)"
     },
     {
       "id": "shop.welcome.2",
       "ja": "アイテムを買う：",
       "ko": "아이템 사기 :",
-      "state": "proposed",
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)",
       "note": "뒤에 「C」 단추 그림"
     },
     {
       "id": "shop.welcome.3",
       "ja": "ショップを出る：",
       "ko": "가게 나가기 :",
-      "state": "proposed",
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)",
       "note": "뒤에 「スタート」 단추 그림"
     },
     {
       "id": "shop.exit.1",
       "ja": "ありがとうございました！",
       "ko": "감사합니다!",
-      "state": "proposed"
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)"
     },
     {
       "id": "shop.exit.2",
       "ja": "またご利用くださいね♥",
       "ko": "또 이용해 주세요♥",
-      "state": "proposed"
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)"
     },
     {
       "id": "shop.button.start",

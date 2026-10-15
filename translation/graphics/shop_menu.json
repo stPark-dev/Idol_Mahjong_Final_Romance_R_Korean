@@ -12,7 +12,7 @@
       "id": "shop.item.2",
       "ja": "牌透視目薬MISE",
       "ko": "패 투시 안약 MISE",
-      "state": "proposed"
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)"
     },
     {
       "id": "shop.item.3",
@@ -26,13 +26,13 @@
       "id": "shop.item.4",
       "ja": "ドラドラ手りゅう弾",
       "ko": "도라도라 수류탄",
-      "state": "proposed"
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)"
     },
     {
       "id": "shop.item.5",
       "ja": "クリスタル立直棒",
       "ko": "크리스탈 리치봉",
-      "state": "proposed"
+      "state": "approved", "approved": "2026-10-15 프로젝트 소유자(D-29)"
     }
   ]
 }

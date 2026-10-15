@@ -198,6 +198,14 @@ def check_shop(first: bytes, sl0: bytes, shop0: bytes, sl: bytes, shop: bytes) -
 
 
 def build(source_cue: Path, out_dir: Path, components: dict) -> dict:
+    if components.get("release"):
+        from . import release           # release imports this module
+        if any(components.get(k) != v for k, v in release.COMPONENTS.items()):
+            raise BuildError(f"a release build needs every component: {release.COMPONENTS}")
+        try:
+            release.check_eligible(release.inputs(), release.GLOSSARY)
+        except release.ReleaseError as ex:
+            raise BuildError(str(ex)) from ex
     disc = SourceDisc(source_cue)
     try:
         return _build(disc, Path(source_cue), Path(out_dir), components)
@@ -337,8 +345,8 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
         "sectors_changed": len(plan.writes),
         "output_bin": out_bin.name,
         "output_sha1": h.hexdigest(),
-        # release needs reviewed Korean subtitles and the rest of the game; never for test builds
-        "distribution": False,
+        # only a release build, which checked every component and approved translation above
+        "distribution": bool(components.get("release")),
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     return manifest

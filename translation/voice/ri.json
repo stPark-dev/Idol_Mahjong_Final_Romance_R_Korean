@@ -18,7 +18,7 @@
    "speaker": "里奈",
    "ja": "私、小泉里奈です",
    "ko": "저, 고이즈미 리나예요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "N-RI",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -30,7 +30,7 @@
    "speaker": "里奈",
    "ja": "あなたの噂、聞いています",
    "ko": "당신 소문, 들었어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -41,7 +41,7 @@
    "speaker": "里奈",
    "ja": "私、麻雀覚えたいの",
    "ko": "저, 마작 배우고 싶어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "note": "kotoba는 이 줄과 다음 줄을 놓침, lv3 두 벌 일치",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -53,7 +53,7 @@
    "speaker": "里奈",
    "ja": "お家で教えてください",
    "ko": "저희 집에서 가르쳐 주세요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json",
    "ko_draft": "집에서 가르쳐 주세요.",
    "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
@@ -66,7 +66,7 @@
    "speaker": "里奈",
    "ja": "私の部屋に男の人が来たの、初めてなの",
    "ko": "제 방에 남자가 온 건 처음이에요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -77,7 +77,7 @@
    "speaker": "里奈",
    "ja": "じゃあ、教えてくださいませ",
    "ko": "그럼, 잘 가르쳐 주세요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "note": "lv3np 뒤 「ご視聴ありがとうございました」는 환각",
    "ko_note": "くださいませ: 애교 섞인 공손함",
    "review": "translation/review/r2-2026-10-13.json"
@@ -90,7 +90,7 @@
    "speaker": "里奈",
    "ja": "あんまり覗かないでね",
    "ko": "그렇게 보지 마세요~",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "화면: 치마가 들춰진 장면",
    "review": "translation/review/r2-2026-10-13.json",
    "ko_draft": "너무 훔쳐보지 마세요.",
@@ -104,7 +104,7 @@
    "speaker": "里奈",
    "ja": "お噂通りお強いですね",
    "ko": "소문대로 강하시네요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -115,7 +115,7 @@
    "speaker": "里奈",
    "ja": "リナ、憧れちゃいます",
    "ko": "리나, 반해 버리겠어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "憧れちゃいます: 동경. 대안 「리나, 동경하게 돼요」",
    "review": "translation/review/r2-2026-10-13.json",
    "ko_draft": "리나, 반해 버릴 것 같아요.",
@@ -129,7 +129,7 @@
    "speaker": "里奈",
    "ja": "リナだってもう負けないもん",
    "ko": "리나도 이젠 안 질 거예요!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -140,7 +140,7 @@
    "speaker": "里奈",
    "ja": "リナ、また負けちゃいました",
    "ko": "리나, 또 져 버렸어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -151,7 +151,7 @@
    "speaker": "里奈",
    "ja": "どう?",
    "ko": "어때요?",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -162,7 +162,7 @@
    "speaker": "里奈",
    "ja": "リナ、色っぽい?",
    "ko": "리나, 섹시해요?",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "色っぽい",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -174,7 +174,7 @@
    "speaker": "里奈",
    "ja": "え? 胸がない?",
    "ko": "네? 가슴이 없다고요?",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "플레이어의 대답(들리지 않음)에 반응",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -186,7 +186,7 @@
    "speaker": "里奈",
    "ja": "ひどーい",
    "ko": "너무해요~!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -197,7 +197,7 @@
    "speaker": "里奈",
    "ja": "リナが一番気にしてることなのに",
    "ko": "리나가 제일 신경 쓰는 건데…",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -208,7 +208,7 @@
    "speaker": "里奈",
    "ja": "先輩に言いつけちゃうから",
    "ko": "선배한테 이를 거예요!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "T-SENPAI",
    "review": "translation/review/r2-2026-10-13.json"
   }

@@ -18,7 +18,7 @@
    "speaker": "ケイト",
    "ja": "ハーイ、ケイトです",
    "ko": "하~이, 케이트예요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "flags": [],
    "note": "후보: 「こんにちは、ケイトです」(lv3 구간), 「はいケイトです」(kotoba), 「私の名前はケイトです」(lv3 전체). 첫 인사 형태 미확정 / 2026-10-15 프로젝트 소유자 검토: 현재 전사 채택",
    "ko_note": "받아쓰기 미확정(인사 형태). 어느 후보든 인사+이름이라 뜻은 같음",
@@ -32,7 +32,7 @@
    "speaker": "ケイト",
    "ja": "私、ベリーベリーストロングプレイヤーです",
    "ko": "저는 베리 베리 스트롱 플레이어예요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "flags": [],
    "note": "후보: lv3 「とてもとても強いプレイヤー」, kotoba 「バリバリストランプレイ」/「ベルベーストラープレーレー」. 뜻은 같음 / 2026-10-15 프로젝트 소유자 검토: 현재 전사 채택",
    "ko_note": "받아쓰기 미확정: 「とてもとても強い」일 수 있음 → 그 경우 「아주아주 강한 플레이어예요」",
@@ -46,7 +46,7 @@
    "speaker": "ケイト",
    "ja": "覚悟してください",
    "ko": "각오하세요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -57,7 +57,7 @@
    "speaker": "ケイト",
    "ja": "OK! レッツプレイ麻雀!",
    "ko": "OK! 레츠 플레이 마작!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "flags": [],
    "note": "후보: 「OK! マジョンをプレイしましょう」(lv3 전체), 「Let's play マジョー」(lv3 구간) / 2026-10-15 프로젝트 소유자 검토: 현재 전사 채택",
    "ko_note": "받아쓰기 미확정: 「マジョンをプレイしましょう」 후보 → 「마작을 해요!」",
@@ -71,7 +71,7 @@
    "speaker": "ケイト",
    "ja": "オーマイガー、ワタシ、ミステイクしました",
    "ko": "오 마이 갓! 저, 미스테이크했어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -82,7 +82,7 @@
    "speaker": "ケイト",
    "ja": "オー、ノー! あなた、ストロングプレイヤーね!",
    "ko": "오, 노! 당신, 스트롱 플레이어네요!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -93,7 +93,7 @@
    "speaker": "ケイト",
    "ja": "バット、ネクスト! 私がいただきます!",
    "ko": "하지만 넥스트! 다음 판은 제 거예요!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "flags": [
     "asr_uncertain"
    ],
@@ -111,7 +111,7 @@
    "speaker": "ケイト",
    "ja": "私、驚きました",
    "ko": "저, 놀랐어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -122,7 +122,7 @@
    "speaker": "ケイト",
    "ja": "あなたのようなパワフルプレイヤーは初めてです",
    "ko": "당신 같은 파워풀 플레이어는 처음이에요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -133,7 +133,7 @@
    "speaker": "ケイト",
    "ja": "私のスペシャル、お見せいたします",
    "ko": "제 스페셜을 보여 드리겠어요.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "スペシャル: 벗는 장면 직전. 원문도 돌려 말함",
    "review": "translation/review/r2-2026-10-13.json",
    "ko_draft": "제 스페셜을 보여 드릴게요.",

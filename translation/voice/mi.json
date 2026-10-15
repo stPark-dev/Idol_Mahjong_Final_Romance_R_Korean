@@ -18,7 +18,7 @@
    "speaker": "美香",
    "ja": "やっと来たわね",
    "ko": "드디어 왔구나.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -29,7 +29,7 @@
    "speaker": "美香",
    "ja": "私は藤崎美香",
    "ko": "난 후지사키 미카.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "N-MI",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -41,7 +41,7 @@
    "speaker": "美香",
    "ja": "リナはあなたに憧れてたのに",
    "ko": "리나는 너한테 반해 있었는데.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json",
    "ko_draft": "리나는 널 동경했었는데.",
    "ko_decision": "2026-10-13 프로젝트 소유자 승인(2차 검수 추천안, D-8)"
@@ -54,7 +54,7 @@
    "speaker": "美香",
    "ja": "女心のわからない奴は",
    "ko": "여자 마음도 모르는 녀석은",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -65,7 +65,7 @@
    "speaker": "美香",
    "ja": "お仕置きしちゃうぞ",
    "ko": "혼내 줄 거야!",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "お仕置き: 귀여운 벌주기 말투",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -77,7 +77,7 @@
    "speaker": "美香",
    "ja": "はぁ、やられちゃった",
    "ko": "하아, 당해 버렸네.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -88,7 +88,7 @@
    "speaker": "美香",
    "ja": "せっかくテンパイしてたのに",
    "ko": "기껏 텐파이까지 갔는데.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "note": "kotoba 「転売」는 오인식",
    "ko_note": "T-TENPAI",
    "review": "translation/review/r2-2026-10-13.json",
@@ -103,7 +103,7 @@
    "speaker": "美香",
    "ja": "そんなに、見つめないで",
    "ko": "그렇게… 빤히 보지 마.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -114,7 +114,7 @@
    "speaker": "美香",
    "ja": "うそー! なんでそんなに強いの?",
    "ko": "말도 안 돼! 왜 그렇게 강한 거야?",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   },
   {
@@ -125,7 +125,7 @@
    "speaker": "美香",
    "ja": "仕方ない",
    "ko": "어쩔 수 없지.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "ko_note": "앞 말소리가 짧아(0.8초) 받아쓰기 두 모델 일치만 근거",
    "review": "translation/review/r2-2026-10-13.json"
   },
@@ -137,7 +137,7 @@
    "speaker": "美香",
    "ja": "私の腕ではかなわないわ",
    "ko": "내 실력으론 못 당하겠어.",
-   "status": "reviewed",
+   "status": "distribution_eligible",
    "review": "translation/review/r2-2026-10-13.json"
   }
  ],
