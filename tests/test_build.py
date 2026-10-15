@@ -263,3 +263,55 @@ def test_profile_build_with_shop_and_mahjong(tmp_path):
     lay = pf.Layout.read(first0, sl0, pd0)
     assert all(np.array_equal(pf.decode_body(lay, k, sl, pd), pf.render_body(pf.layout_body(bodies[k])))
                for k in range(5))
+
+
+def test_kisekae_build_writes_only_the_dress_up_buttons(tmp_path):
+    from fromance import kisebtn as kb
+    m = build.build(CUE, tmp_path, {"subtitles": None, "kisekae": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        changed = {n for n in old if old[n].lba < src.sectors and read(user, files[n]) != read(src.user, old[n])}
+        first0, kd0 = read(src.user, old["1ST.BIN"]), read(src.user, old["KISEDAT.BIN"])
+    finally:
+        src.close()
+    assert changed == {"KISEDAT.BIN"}
+    assert read(user, files["KISEDAT.BIN"]) == kb.build_file(first0, kd0, kb.load_texts(ROOT / "translation/graphics/kise_buttons.json"))
+
+
+@pytest.mark.parametrize("text", [None, "ko"])
+def test_title_build_writes_the_korean_logo(tmp_path, text):
+    from PIL import Image
+    from fromance import title as tt
+    m = build.build(CUE, tmp_path, {"subtitles": text, "mahjong": True, "title": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        first0, mj30 = read(src.user, old["1ST.BIN"]), read(src.user, old["MJDAT3.BIN"])
+    finally:
+        src.close()
+    first, mj3 = read(user, files["1ST.BIN"]), read(user, files["MJDAT3.BIN"])
+    want_first, want_mj3 = tt.build_files(first0, mj30, Image.open(ROOT / "title_ko.png"))
+    assert mj3 == want_mj3
+    mask = tt.editable_first(len(first0))
+    assert (np.frombuffer(first[:len(first0)], np.uint8)[mask] == np.frombuffer(want_first, np.uint8)[mask]).all()
+
+
+def test_title_alone_changes_only_its_files(tmp_path):
+    m = build.build(CUE, tmp_path, {"subtitles": None, "title": True})
+    user = _reader(tmp_path / m["output_bin"])
+    files = iso9660.list_files(user)
+    read = lambda f, n: b"".join(f(n.lba + i) for i in range(n.sectors))[:n.size]
+    src = SourceDisc(CUE)
+    try:
+        old = iso9660.list_files(src.user)
+        changed = {n for n in old if old[n].lba < src.sectors and read(user, files[n]) != read(src.user, old[n])}
+    finally:
+        src.close()
+    assert changed == {"1ST.BIN", "MJDAT3.BIN"}

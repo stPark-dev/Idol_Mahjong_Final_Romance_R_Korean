@@ -8,8 +8,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+from PIL import Image
 
-from . import cdsector, iso9660, mjdeclare, mjdraw, mjlabel, mjmenu, mjyaku, profile, shopdesc, shopmark, shopmenu, shopmsg, subtitles
+from . import cdsector, iso9660, kisebtn, mjdeclare, mjdraw, mjlabel, mjmenu, mjyaku, profile, shopdesc, shopmark, shopmenu, shopmsg, subtitles, title
 from .disc import SourceDisc, TRACK1_SHA1, parse_cue
 from .writeplan import WritePlan
 
@@ -27,9 +28,11 @@ MJ_LABEL = ROOT / "translation/graphics/mj_label.json"
 MJ_TITLE = ROOT / "translation/graphics/mj_title.json"
 PROFILE = ROOT / "translation/graphics/profile.json"
 MJ_SCORE = ROOT / "translation/graphics/mj_score.json"
+KISE_BUTTONS = ROOT / "translation/graphics/kise_buttons.json"
+TITLE_LOGO = ROOT / "title_ko.png"
 GRAPHICS_ERRORS = (shopmenu.ShopMenuError, shopmsg.ShopMsgError, shopdesc.ShopDescError, shopmark.ShopMarkError,
                    mjmenu.MjMenuError, mjdeclare.MjDeclareError, mjdraw.MjDrawError, mjyaku.MjYakuError, mjlabel.MjLabelError,
-                   profile.ProfileError)
+                   profile.ProfileError, kisebtn.KiseError, title.TitleError)
 OUT_NAME = "Idol Mahjong - Final Romance R (Korean)"
 OUT_CUE = f"{OUT_NAME}.cue"
 
@@ -213,17 +216,32 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
     e = files["1ST.BIN"]
     first0 = disc.read_file(e.lba, e.size)
     base = first_graphics(first0, components)
+    if components.get("title"):       # map and palette in 1ST.BIN, cells in MJDAT3.BIN
+        em = files["MJDAT3.BIN"]
+        mj30 = disc.read_file(em.lba, em.size)
+        if components.get("mahjong") and (title.editable_first(len(first0)) & (
+                mjdraw.editable(mjdraw.Layout.read(first0), len(first0)) | mjlabel.editable(len(first0)))).any():
+            raise BuildError("protected: the title and the mahjong words share 1ST.BIN bytes")
+        try:
+            with Image.open(TITLE_LOGO) as logo:
+                base, mj3 = title.build_files(base, mj30, logo)
+        except (GRAPHICS_ERRORS + (OSError,)) as ex:
+            raise BuildError(str(ex)) from ex
+        _merge(writes, _file_sectors("MJDAT3.BIN", em.lba, mj3, disc.user), "MJDAT3.BIN")
+        report["MJDAT3.BIN"] = {"replaced": True, "size": len(mj3)}
     if base != first0 and not text:
         _merge(writes, _file_sectors("1ST.BIN", e.lba, base, disc.user), "1ST.BIN")
         report["1ST.BIN"] = {"replaced": True, "size": len(base)}
     if text:
         first, added = subtitle_parts(disc, files, text, base)
+        mask = np.zeros(len(first0), bool)
         if components.get("mahjong"):     # the subtitle patch must leave the draw words alone
-            lay = mjdraw.Layout.read(first0)
-            mask = mjdraw.editable(lay, len(first0)) | mjlabel.editable(len(first0))
-            same = np.frombuffer(first[:len(first0)], np.uint8)[mask] == np.frombuffer(base, np.uint8)[mask]
-            if not same.all():
-                raise BuildError("protected: the subtitle patch overwrote mahjong draw words in 1ST.BIN")
+            mask |= mjdraw.editable(mjdraw.Layout.read(first0), len(first0)) | mjlabel.editable(len(first0))
+        if components.get("title"):       # ... and the title map and palette
+            mask |= title.editable_first(len(first0))
+        same = np.frombuffer(first[:len(first0)], np.uint8)[mask] == np.frombuffer(base, np.uint8)[mask]
+        if not same.all():
+            raise BuildError("protected: the subtitle patch overwrote redrawn graphics in 1ST.BIN")
         if (len(first) + 2047) // 2048 != e.sectors:
             raise BuildError("1ST.BIN would need another sector")
         _merge(writes, _file_sectors("1ST.BIN", e.lba, first, disc.user), "1ST.BIN")
@@ -260,6 +278,15 @@ def _build(disc: SourceDisc, source_cue: Path, out_dir: Path, components: dict) 
             raise BuildError(str(ex)) from ex
         _merge(writes, _file_sectors("MJDAT2.BIN", e2.lba, out2, disc.user), "MJDAT2.BIN")
         report["MJDAT2.BIN"] = {"replaced": True, "size": len(out2)}
+    if components.get("kisekae"):
+        ek = files["KISEDAT.BIN"]
+        kd = disc.read_file(ek.lba, ek.size)
+        try:
+            outk = kisebtn.build_file(first0, kd, kisebtn.load_texts(KISE_BUTTONS))
+        except GRAPHICS_ERRORS as ex:
+            raise BuildError(str(ex)) from ex
+        _merge(writes, _file_sectors("KISEDAT.BIN", ek.lba, outk, disc.user), "KISEDAT.BIN")
+        report["KISEDAT.BIN"] = {"replaced": True, "size": len(outk)}
     if sizes or placed:
         try:
             _merge(writes, iso9660.repack_root(disc.user, sizes, placed), "root directory")

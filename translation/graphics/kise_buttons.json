@@ -1,0 +1,47 @@
+{
+  "note": "옷 갈아입히기 화면 단추(KISEDAT.BIN NBG3 16색 셀, 배치 표 118-129 = 단추 6개 x 보통·눌림). D-26 승인.",
+  "entries": [
+    {
+      "id": "kise.end",
+      "ja": "終了",
+      "ko": "종료",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-26)"
+    },
+    {
+      "id": "kise.zoom",
+      "ja": "拡大",
+      "ko": "확대",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-26)"
+    },
+    {
+      "id": "kise.unzoom",
+      "ja": "縮小",
+      "ko": "축소",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-26)"
+    },
+    {
+      "id": "kise.next",
+      "ja": "送る",
+      "ko": "다음",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-26)"
+    },
+    {
+      "id": "kise.back",
+      "ja": "戻る",
+      "ko": "이전",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-26)"
+    },
+    {
+      "id": "kise.clear",
+      "ja": "クリア",
+      "ko": "지우기",
+      "state": "approved",
+      "approved": "2026-10-14 프로젝트 소유자(D-26)"
+    }
+  ]
+}

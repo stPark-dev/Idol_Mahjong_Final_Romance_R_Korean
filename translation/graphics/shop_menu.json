@@ -17,8 +17,9 @@
     {
       "id": "shop.item.3",
       "ja": "積み込み招き猫",
-      "ko": "쌓기 복고양이",
-      "state": "proposed",
+      "ko": "패 쌓기 복고양이",
+      "state": "approved",
+      "approved": "2026-10-15 프로젝트 소유자",
       "note": "뒤의 「LV1」(레벨 따라 LV2·LV3)과 가격은 원본 그림 그대로"
     },
     {
